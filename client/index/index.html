@@ -1,0 +1,28 @@
+<template name="index">
+	{{> listGroups}}
+	{{> addGroups}}
+</template>
+
+<template name="listGroups">
+	{{#if groups}}
+	<ul class="collection with-header">
+		<li class="collection-header"><h4>Groups</h4></li>
+		{{#each groups}}
+		<li class="collection-item"><a href="{{pathFor route='groups.show' data=this}}">{{name}}<span class="badge teal white-text">{{points}} points</span><span class="badge teal white-text">{{votes}} votes</span></a></li>
+		{{/each}}
+	</ul>
+	{{else}}
+	<div class="row center">
+		<h5>You don't appear to be a part of any groups - join or create one using the buttons below!</h5>
+	</div>
+	{{/if}}
+</template>
+
+<template name="addGroups">
+<br/><br/>
+	<div class="row center">
+		<a class="waves-effect waves-light btn-large">Join a Group</a>
+		<a class="waves-effect waves-light btn-large modal-trigger" data-target="newGroupModal">Start a Group</a>
+		{{> newGroup}}
+	</div>
+</template>

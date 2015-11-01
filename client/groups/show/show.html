@@ -1,0 +1,45 @@
+<template name="group">
+	<div class="row valign-wrapper">
+		<h3>{{name}}</h3>
+		<div class="col sm6">{{#if owner}}<a class="waves-effect btn" id="groupSettings"><i class="material-icons left">settings</i>Settings</a>{{/if}}</div>
+	</div>
+	<div class="row">
+		<div class="col s12">
+			{{#if voting}}
+				<div class="center">
+					<h5>Voting in progress...</h5>
+					<a class="waves-effect btn-large" data-trigger="votingModal" id="castVote">Cast vote</a>
+				</div>
+			{{else}}
+				<div class="center">
+					<h5>Currently no voting in progress</h5>
+					<a class="waves-effect btn-large" id="startVote">Start a vote</a>
+				</div>
+			{{/if}}
+			{{> voting}}
+		</div>
+	</div>
+	<div class="row">
+		<h4>History</h4>
+		<div class="row">
+			{{#each history}}
+				<div class="col s6 m3">
+					<div class="card">
+						<div class="card-content">
+							<span class="card-title">{{date}}</span>
+							<ul class="collection">
+								{{#each result}}
+								<li class="collection-item avatar">
+									<img src="images/{{beer}}.png" class="circle">
+									<span class="title">{{name}}</span>
+									<span class="badge">{{count}}</span>
+								</li>
+								{{/each}}
+							</ul>
+						</div>
+					</div>
+				</div>
+			{{/each}}
+		</div>
+	</div>
+</template>
