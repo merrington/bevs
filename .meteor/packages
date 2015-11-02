@@ -32,3 +32,4 @@ materialize:materialize@=0.97.0
 accounts-ui
 service-configuration
 xolvio:cucumber
+http
