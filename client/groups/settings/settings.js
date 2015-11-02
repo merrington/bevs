@@ -9,6 +9,12 @@ Template.groupSettings.events({
 				console.log(result);
 			}
 		});
+	},
+	'click .addBeerBtn': function(event) {
+		Groups.update({'_id': Template.parentData(1)._id}, {$addToSet: {'beers': this}});
+	},
+	'click .deleteBeerBtn': function(event) {
+		Groups.update({'_id': Template.parentData(1)._id}, {$pull: {'beers': this}});
 	}
 });
 
@@ -19,4 +25,5 @@ Template.groupSettings.helpers({
 	beerResults: function() {
 		return Session.get('beerResults');
 	}
-})
+});
+

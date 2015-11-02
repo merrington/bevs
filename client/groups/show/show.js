@@ -10,13 +10,11 @@ Template.group.events({
 		$('#votingModal').openModal();
 	},
 	'click #groupSettings': function(event) {
-
+		$('#groupSettingsModal').openModal();
 	}
 });
 
 Template.group.onRendered(function() {
-	$('.modal-trigger').leanModal();
-
 	var voting = this.data && this.data.voting;
 	if (voting) {
 		if (!_.find(voting.votes, function(vote) { return vote.userId === Meteor.userId(); })) {
