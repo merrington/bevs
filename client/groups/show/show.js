@@ -26,8 +26,7 @@ Template.group.onRendered(function() {
 Template.group.helpers({
 	owner: function() {
 		if (Groups.findOne()) {
-			return _.find(Groups.findOne().members, function(member) {
-				return ((member.id === Meteor.userId()) && (member.roles.indexOf('owner') !== -1)) 	;		});
+			return _.contains(_.findWhere(Groups.findOne().members, {'id': Meteor.userId()}).roles, 'owner');
 		}
 	}
 })
