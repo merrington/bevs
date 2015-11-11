@@ -1,0 +1,12 @@
+<template name="userCollection">
+	<ul class="collection with-header">
+		<li class="collection-header"><h6>{{header}}</h6></li>
+		{{#each users}}
+		<li class="collection-item avatar">
+			<img src="{{image}}" alt="" class="circle">
+			<span class="title">{{name}}</span>
+			{{#if showPoints}}<div class="chip">{{points}}</div>{{/if}}
+		</li>
+		{{/each}}
+	</ul>
+</template>
