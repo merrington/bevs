@@ -71,23 +71,23 @@
 	<div class="row">
 		<div class="col s12">
 			<div class="input-field col s12 m3">
-				<input id="starterPoints" type="number" min="0"/>
+				<input id="starterPoints" type="number" min="0" value="{{points.starterPoints}}"/>
 				<label for="starterPoints">New User Points</label>
 			</div>
 			<div class="input-field col s12 m3">
-				<input id="refreshPoints" type="number" min="1"/>
+				<input id="refreshPoints" type="number" min="1" value="{{points.refreshPoints}}"/>
 				<label for="refreshPoints">Refresh Points</label>
 			</div>
 			<div class="input-field col s12 m3">
-				<input id="seasonWinPoints" type="number" min="1"/>
+				<input id="seasonWinPoints" type="number" min="1" value="{{points.seasonWinPoints}}"/>
 				<label for="seasonWinPoints">End season at <i>"X"</i> victory points</label>
 			</div>
 			<div class="input-field col s12 m3">
-				<input id="againstValue" type="number" max="-0.1"/>
+				<input id="againstValue" type="number" max="-0.1" value="{{points.againstValue}}"/>
 				<label for="againstValue">Value of an "against" point</label>
 			</div>
 			<div class="input-field col s12 m3">
-				<input id="loserVpBonus" type="number" min="0"/>
+				<input id="loserVpBonus" type="number" min="0" value="{{points.loserVpBonus}}"/>
 				<label for="loserVpBonus">V.P. bonus for losing beers</label>
 			</div>
 		</div>

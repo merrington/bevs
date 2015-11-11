@@ -20,6 +20,18 @@ Template.groupSettings.events({
 	},
 	'click .deleteBeerBtn': function(event) {
 		Groups.update({'_id': Template.parentData(1)._id}, {$pull: {'beers': this}});
+	},
+	'click #accept': function(event) {
+		var newSettings = {
+			'points': {
+				'starterPoints': $('#starterPoints').val(),
+				'refreshPoints': $('#refreshPoints').val(),
+				'seasonWinPoints': $('#seasonWinPoints').val(),
+				'againstValue': $('#againstValue').val(),
+				'loserVpBonus': $('#loserVpBonus').val(),
+			}
+		}
+		Meteor.call('updateGroupSettings', this._id, newSettings);
 	}
 });
 
