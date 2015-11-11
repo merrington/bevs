@@ -48,9 +48,19 @@
 			</form>
 		</div>
 		<div class="row">
-			<div class="col s12">
-				{{#if searched}}
-				{{> beerCollection beers=beerResults header='Search Results' icon='add_box' action='add'}}
+			<div class="col s12" id="beerResultsDiv">
+				{{#if searched "searched"}}
+					{{> beerCollection beers=beerResults header='Search Results' icon='add_box' action='add'}}
+				{{/if}}
+				{{#if searched 0}}
+					<div class="center-align">
+						<h5>0 results</h5>
+					</div>
+				{{/if}}
+				{{#if searched "searching"}}
+					<div class="center-align">
+					{{> loading}}
+					</div>
 				{{/if}}
 			</div>
 		</div>

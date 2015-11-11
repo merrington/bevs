@@ -4,11 +4,16 @@ Template.groupSettings.events({
 			if (error) {
 				console.log(error);
 			} else {
-				Session.set('beerResults', result);
-				Session.set('searched', true);
+				if (result.length === 0) {
+					Session.set('searched', 0);
+				} else {
+					Session.set('beerResults', result);
+					Session.set('searched', "searched");
+				}
 				console.log(result);
 			}
 		});
+		Session.set('searched', "searching");
 	},
 	'click .addBeerBtn': function(event) {
 		Groups.update({'_id': Template.parentData(1)._id}, {$addToSet: {'beers': this}});
@@ -19,8 +24,8 @@ Template.groupSettings.events({
 });
 
 Template.settingsBeerTab.helpers({
-	searched: function() {
-		return Session.get('searched');
+	searched: function(value) {
+		return Session.get('searched') === value;
 	},
 	beerResults: function() {
 		return Session.get('beerResults');
