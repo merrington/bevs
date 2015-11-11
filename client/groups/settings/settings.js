@@ -18,7 +18,7 @@ Template.groupSettings.events({
 	}
 });
 
-Template.groupSettings.helpers({
+Template.settingsBeerTab.helpers({
 	searched: function() {
 		return Session.get('searched');
 	},
@@ -26,4 +26,8 @@ Template.groupSettings.helpers({
 		return Session.get('beerResults');
 	}
 });
+
+Template.groupSettings.onRendered(function() {
+	$('ul.tabs').tabs();
+})
 
