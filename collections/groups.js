@@ -19,5 +19,17 @@ Meteor.methods({
 				return id;
 			}
 		});
+	},
+	'updateGroupSettings': function(groupId, newSettings) {
+		var group = Groups.findOne({'_id': groupId});
+		if (Meteor.call('isOwnerOfGroup', group)) {
+			group = _.extend(group, newSettings);
+			Groups.update({'_id': groupId}, group);
+		}
+	},
+	isOwnerOfGroup: function(group) {
+		if (group) {
+			return _.findWhere(group.members, {'id': this.userId});
+		}
 	}
-})
+});
