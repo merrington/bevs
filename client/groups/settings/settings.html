@@ -3,33 +3,21 @@
 		<div class="modal-content">
 			<h4>Settings</h4>
 			<div class="row">
-				<h5>Beer selection</h5>
-				<div class="col s12 m6">
-					{{> beerCollection beers=beers header='Selected Beers' icon='delete' action='delete'}}
+				<div class="col s12">
+					<ul class="tabs">
+						<li class="tab col s3"><a class="active" href="#settingsBeerTab">Beer Selection</a></li>
+						<li class="tab col s3"><a href="#settingsPointsTab">Points</a></li>
+						<li class="tab col s3"><a href="#settingsUsersTab">Users</a></li>
+					</ul>
 				</div>
-				<div class="col s12 m6">
-					<h6>Add a Beer</h6>
-					<div class="row valign-wrapper">
-						<form class="col s12 m12">
-							<div class="row valign-wrapper">
-								<div class="input-field col s12 m9">
-									<i class="material-icons prefix">search</i>
-									<input id="searchInput" type="text">
-									<label for="searchInput">Search</label>
-								</div>
-								<div class="col s12 m3">
-									<a id="searchBtn" class="waves-effect btn">Search</a>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="row">
-						<div class="col s12">
-							{{#if searched}}
-							{{> beerCollection beers=beerResults header='Search Results' icon='add_box' action='add'}}
-							{{/if}}
-						</div>
-					</div>
+				<div id="settingsBeerTab" class="col s12">
+					{{> settingsBeerTab}}
+				</div>
+				<div id="settingsPointsTab" class="col s12">
+					{{> settingsPointsTab}}
+				</div>
+				<div id="settingsUsersTab" class="col s12">
+					{{> settingsUsersTab}}
 				</div>
 			</div>
 		</div>
@@ -37,4 +25,67 @@
 			<a id="accept" class="modal-action modal-close waves-effect btn">Accept</a>
 		</div>
 	</div>
+</template>
+
+<template name="settingsBeerTab">
+	<div class="col s12 m6">
+		{{> beerCollection beers=beers header='Selected Beers' icon='delete' action='delete'}}
+	</div>
+	<div class="col s12 m6">
+		<h6>Add a Beer</h6>
+		<div class="row valign-wrapper">
+			<form class="col s12 m12">
+				<div class="row valign-wrapper">
+					<div class="input-field col s12 m9">
+						<i class="material-icons prefix">search</i>
+						<input id="searchInput" type="text">
+						<label for="searchInput">Search</label>
+					</div>
+					<div class="col s12 m3">
+						<a id="searchBtn" class="waves-effect btn">Search</a>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="row">
+			<div class="col s12">
+				{{#if searched}}
+				{{> beerCollection beers=beerResults header='Search Results' icon='add_box' action='add'}}
+				{{/if}}
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="settingsPointsTab">
+	<div class="row">
+		<div class="col s12">
+			<div class="input-field col s12 m3">
+				<input id="starterPoints" type="number" min="0"/>
+				<label for="starterPoints">New User Points</label>
+			</div>
+			<div class="input-field col s12 m3">
+				<input id="refreshPoints" type="number" min="1"/>
+				<label for="refreshPoints">Refresh Points</label>
+			</div>
+			<div class="input-field col s12 m3">
+				<input id="seasonWinPoints" type="number" min="1"/>
+				<label for="seasonWinPoints">End season at <i>"X"</i> victory points</label>
+			</div>
+			<div class="input-field col s12 m3">
+				<input id="againstValue" type="number" max="-0.1"/>
+				<label for="againstValue">Value of an "against" point</label>
+			</div>
+			<div class="input-field col s12 m3">
+				<input id="loserVpBonus" type="number" min="0"/>
+				<label for="loserVpBonus">V.P. bonus for losing beers</label>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="settingsUsersTab">
+	<ul class="collection with-header">
+
+	</ul>
 </template>
