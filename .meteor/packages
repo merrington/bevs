@@ -28,9 +28,10 @@ sacha:spin
 aldeed:simple-schema
 velocity:core
 blaze
-materialize:materialize@=0.97.0
 accounts-ui
 service-configuration
 xolvio:cucumber
 http
 semantic:ui
+flemay:less-autoprefixer
+semantic:ui-css
