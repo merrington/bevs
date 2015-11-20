@@ -1,8 +1,8 @@
 <template name="loginMenu">
 	{{#if currentUser}}
-	<li><a href="#" id="logoutLink">Logout</a></li>
+	<a class="item" href="#" id="logoutLink">Logout</a>
 <!--	<li><img src="{{currentUser.profile.image}}?sz=60" alt="" class="circle responsive-img valign"></li>-->
 	{{else}}
-	<a href="#" id="loginLink">Login</a>
+	<a class="item" href="#" id="loginLink">Login</a>
 	{{/if}}
 </template>

@@ -1,97 +1,101 @@
 <template name="groupSettings">
-	<div class="modal modal-fixed-footer" id="groupSettingsModal">
-		<div class="modal-content">
-			<h4>Settings</h4>
-			<div class="row">
-				<div class="col s12">
-					<ul class="tabs">
-						<li class="tab col s3"><a class="active" href="#settingsBeerTab">Beer Selection</a></li>
-						<li class="tab col s3"><a href="#settingsPointsTab">Points</a></li>
-						<li class="tab col s3"><a href="#settingsUsersTab">Users</a></li>
-					</ul>
-				</div>
-				<div id="settingsBeerTab" class="col s12">
-					{{> settingsBeerTab}}
-				</div>
-				<div id="settingsPointsTab" class="col s12">
-					{{> settingsPointsTab}}
-				</div>
-				<div id="settingsUsersTab" class="col s12">
-					{{> settingsUsersTab}}
-				</div>
+	<div class="ui modal long" id="groupSettingsModal">
+		<div class="header">Settings</div>
+		<div class="content">
+			<div class="ui top attached tabular menu">
+				<a class="active item" data-tab="settingsBeerTab">Beer Selection</a>
+				<a class="item" data-tab="settingsPointsTab">Points</a>
+				<a class="item" data-tab="settingsUsersTab">Members</a>
+			</div>
+			<div class="ui bottom attached tab segment active" data-tab="settingsBeerTab">
+				{{> settingsBeerTab}}
+			</div>
+			<div class="ui bottom attached tab segment" data-tab="settingsPointsTab">
+				{{> settingsPointsTab}}
+			</div>
+			<div class="ui bottom attached tab segment" data-tab="settingsUsersTab">
+				{{> settingsUsersTab}}
 			</div>
 		</div>
-		<div class="modal-footer">
-			<a id="accept" class="modal-action modal-close waves-effect btn">Accept</a>
+		<div class="actions">
+			<a id="acceptSettingsBtn" class="ui ok button">Accept</a>
 		</div>
 	</div>
 </template>
 
 <template name="settingsBeerTab">
-	<div class="col s12 m6">
-		{{> beerCollection beers=beers header='Selected Beers' icon='delete' action='delete'}}
-	</div>
-	<div class="col s12 m6">
-		<h6>Add a Beer</h6>
-		<div class="row valign-wrapper">
-			<form class="col s12 m12">
-				<div class="row valign-wrapper">
-					<div class="input-field col s12 m9">
-						<i class="material-icons prefix">search</i>
-						<input id="searchInput" type="text">
-						<label for="searchInput">Search</label>
-					</div>
-					<div class="col s12 m3">
-						<a id="searchBtn" class="waves-effect btn">Search</a>
+	<div class="ui two column stackable divided grid">
+		<div class="row">
+			<div class="column">
+				{{#beerCollection beers=beers header='Selected Beers' imgsize='tiny'}}
+					{{> addRemoveBeers icon='trash' action='delete' beer=beer}}
+				{{/beerCollection}}
+			</div>
+			<div class="column">
+				<div class="row">
+					<div class="column">
+						<h5>Add a Beer</h5>
+						<div class="ui icon input fluid">
+							<input id="searchInput" type="text" placeholder="Search...">
+							<i class="circular search link icon" id="searchBtn"></i>
+						</div>
 					</div>
 				</div>
-			</form>
-		</div>
-		<div class="row">
-			<div class="col s12" id="beerResultsDiv">
-				{{#if searched "searched"}}
-					{{> beerCollection beers=beerResults header='Search Results' icon='add_box' action='add'}}
-				{{/if}}
-				{{#if searched 0}}
-					<div class="center-align">
-						<h5>0 results</h5>
+				<div class="row">
+					<div class="column">
+						<div id="beerResultsDiv">
+							{{#if searched "searched"}}
+								{{#beerCollection beers=beerResults header='Search Results' imgsize='tiny'}}
+									{{> addRemoveBeers icon='add square' action='add' beer=beer}}
+								{{/beerCollection}}
+							{{/if}}
+							{{#if searched 0}}
+							<div class="ui center aligned container">
+								<h5>0 results</h5>
+							</div>
+							{{/if}}
+							{{#if searched "searching"}}
+							{{> loading loadingText='Searching'}}
+							{{/if}}
+						</div>
 					</div>
-				{{/if}}
-				{{#if searched "searching"}}
-					<div class="center-align">
-					{{> loading}}
-					</div>
-				{{/if}}
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <template name="settingsPointsTab">
-	<div class="row">
-		<div class="col s12">
-			<div class="input-field col s12 m3">
+	<form class="ui form">
+		<div class="three fields">
+			<div class="field">
+				<label>New User Points</label>
 				<input id="starterPoints" type="number" min="0" value="{{points.starterPoints}}"/>
-				<label for="starterPoints">New User Points</label>
 			</div>
-			<div class="input-field col s12 m3">
-				<input id="refreshPoints" type="number" min="1" value="{{points.refreshPoints}}"/>
+			<div class="field">
 				<label for="refreshPoints">Refresh Points</label>
+				<input id="refreshPoints" type="number" min="1" value="{{points.refreshPoints}}"/>
 			</div>
-			<div class="input-field col s12 m3">
+			<div class="field">
+				<label>End season at <i>"X"</i> victory points</label>
 				<input id="seasonWinPoints" type="number" min="1" value="{{points.seasonWinPoints}}"/>
-				<label for="seasonWinPoints">End season at <i>"X"</i> victory points</label>
-			</div>
-			<div class="input-field col s12 m3">
-				<input id="againstValue" type="number" max="-0.1" value="{{points.againstValue}}"/>
-				<label for="againstValue">Value of an "against" point</label>
-			</div>
-			<div class="input-field col s12 m3">
-				<input id="loserVpBonus" type="number" min="0" value="{{points.loserVpBonus}}"/>
-				<label for="loserVpBonus">V.P. bonus for losing beers</label>
 			</div>
 		</div>
-	</div>
+		<div class="three fields">
+			<div class="field">
+				<label>Value of a "for" point</label>
+				<input id="forValue" type="number" min="0" value="{{points.forValue}}"/>
+			</div>
+			<div class="field">
+				<label>Value of an "against" point</label>
+				<input id="againstValue" type="number" max="-0.1" value="{{points.againstValue}}"/>
+			</div>
+			<div class="field">
+				<label>V.P. bonus for losing beers</label>
+				<input id="loserVpBonus" type="number" min="0" value="{{points.loserVpBonus}}"/>
+			</div>
+		</div>
+	</form>
 </template>
 
 <template name="settingsUsersTab">

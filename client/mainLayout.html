@@ -1,19 +1,17 @@
 <template name="mainLayout">
-	<nav class="light-blue lighten-1" role="navigation">
-		<div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><i class="fa fa-beer"> BEVS</i></a>
-			<ul class="right hide-on-med-and-down valign-wrapper">
-				{{> loginMenu}}
-			</ul>
-
-			<ul id="nav-mobile" class="side-nav">
-				<li><a href="#">{{> loginMenu}}</a></li>
-			</ul>
-			<a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+	<div class="pushable">
+		<div class="ui fixed borderless inverted menu" id="navbar">
+			<div class="ui container">
+				<div class="header item">
+					<h1 class="ui icon header inverted"><i class="fa fa-beer"></i> BEVS</h1>
+				</div>
+				<div class="right menu">
+					<div class="item">{{> loginMenu}}</div>
+				</div>
+			</div>
 		</div>
-	</nav>
 
-	<div class="section no-pad-bot" id="index-banner">
-		<div class="container">
+		<div class="ui text container">
 			{{> yield}}
 		</div>
 	</div>

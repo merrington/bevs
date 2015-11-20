@@ -1,39 +1,31 @@
 Template.groupSettings.events({
-	'click #searchBtn': function(event) {
-		Meteor.call('searchBDB', $('#searchInput').val(), function(error, result) {
-			if (error) {
-				console.log(error);
-			} else {
-				if (result.length === 0) {
-					Session.set('searched', 0);
-				} else {
-					Session.set('beerResults', result);
-					Session.set('searched', "searched");
-				}
-				console.log(result);
-			}
-		});
-		Session.set('searched', "searching");
-	},
+});
+
+Template.settingsBeerTab.events({
 	'click .addBeerBtn': function(event) {
-		Groups.update({'_id': Template.parentData(1)._id}, {$addToSet: {'beers': this}});
+		Groups.update({'_id': Template.parentData(1)._id}, {$addToSet: {'beers': this.beer}});
 	},
 	'click .deleteBeerBtn': function(event) {
-		Groups.update({'_id': Template.parentData(1)._id}, {$pull: {'beers': this}});
+		Groups.update({'_id': Template.parentData(1)._id}, {$pull: {'beers': this.beer}});
 	},
-	'click #accept': function(event) {
-		var newSettings = {
-			'points': {
-				'starterPoints': $('#starterPoints').val(),
-				'refreshPoints': $('#refreshPoints').val(),
-				'seasonWinPoints': $('#seasonWinPoints').val(),
-				'againstValue': $('#againstValue').val(),
-				'loserVpBonus': $('#loserVpBonus').val(),
-			}
+	'click #searchBtn, keypress #searchInput': function(event) {
+		if (event.type === 'click' || event.which === 13) {
+			Meteor.call('searchBDB', $('#searchInput').val(), function(error, result) {
+				if (error) {
+					console.log(error);
+				} else {
+					if (result.length === 0) {
+						Session.set('searched', 0);
+					} else {
+						Session.set('beerResults', result);
+						Session.set('searched', "searched");
+					}
+				}
+			});
+			Session.set('searched', "searching");
 		}
-		Meteor.call('updateGroupSettings', this._id, newSettings);
-	}
-});
+	},
+})
 
 Template.settingsBeerTab.helpers({
 	searched: function(value) {
@@ -45,6 +37,10 @@ Template.settingsBeerTab.helpers({
 });
 
 Template.groupSettings.onRendered(function() {
-	$('ul.tabs').tabs();
+	$('#groupSettingsModal > div.content > div.ui.top.attached.tabular.menu .item').tab({
+		onLoad: function() {
+			$('#groupSettingsModal').modal('refresh');
+		}
+	});
 })
 

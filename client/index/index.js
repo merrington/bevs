@@ -1,5 +1,17 @@
-Template.addGroups.onRendered(function() {
-	$('.modal-trigger').leanModal();
+Template.addGroups.events({
+	'click #newGroupButton': function(event) {
+		$('#newGroupModal').modal({
+			onApprove: function() {
+				Meteor.call('newGroup', $('#groupName').val(), function(error, id) {
+					if (error) {
+						Materialize.toast('Error creating group, please try again!', 4000);
+					} else {
+						Router.go('groups.show', {_id: id});
+					}
+				});
+			}
+		}).modal('show');
+	}
 });
 
 Template.listGroups.helpers({

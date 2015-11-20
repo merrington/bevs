@@ -21,7 +21,6 @@ accounts-base
 accounts-google
 underscore
 iron:router
-momentjs:moment
 aldeed:autoform
 fortawesome:fontawesome
 sacha:spin
@@ -35,3 +34,6 @@ http
 semantic:ui
 flemay:less-autoprefixer
 semantic:ui-css
+mizzao:user-status
+alanning:roles
+momentjs:moment

@@ -1,46 +1,76 @@
 <template name="group">
-	<div class="row valign-wrapper">
-		<h3>{{name}}</h3>
-		<div class="col sm6">{{#if owner}}<a class="waves-effect btn modal-trigger" data-target="groupSettingsModal" id="groupSettings"><i class="material-icons left">settings</i>Settings</a>{{/if}}</div>
+	<h1 class="ui header">{{name}}</h1>
+	{{#if isOwner}}
+	<div class="ui compact labeled icon button" id="groupSettingsButton">
+		<i class="icon wrench"></i> Settings
 	</div>
-	<div class="row">
+	{{/if}}
+	<div class="ui center aligned container">
 		<div class="col s12">
 			{{#if voting}}
 				<div class="center">
-					<h5>Voting in progress...</h5>
-					<a class="waves-effect btn-large" data-trigger="votingModal" id="castVote">Cast vote</a>
+					{{#if hasVoted}}
+						<div class="ui positive message">
+							<div class="header">
+								Vote recorded
+							</div>
+							<p>Thanks for voting!</p>
+							<div class="ui animated blue {{majorityDisabled}} button" id="closeVote">
+								<div class="visible content">
+									{{votesCounted}} votes submitted
+								</div>
+								<div class="hidden content">
+									Close voting
+								</div>
+							</div>
+						</div>
+					{{else}}
+						<h3>Voting in progress...</h3>
+						<a class="ui primary button" data-trigger="votingModal" id="castVote">Cast vote</a>
+					{{/if}}
 				</div>
 			{{else}}
 				<div class="center">
 					<h5>Currently no voting in progress</h5>
-					<a class="waves-effect btn-large" id="startVote">Start a vote</a>
+					<a class="ui primary button" id="startVote">Start a vote</a>
 				</div>
 			{{/if}}
 			{{> voting}}
 		</div>
 	</div>
+	{{> history}}
+
+	{{> groupSettings}}
+</template>
+
+<template name="history">
+	<h1 class="ui header">History</h1>
 	<div class="row">
-		<h4>History</h4>
-		<div class="row">
+		<div class="ui cards">
 			{{#each history}}
-				<div class="col s6 m3">
-					<div class="card">
-						<div class="card-content">
-							<span class="card-title">{{date}}</span>
-							<ul class="collection">
-								{{#each result}}
-								<li class="collection-item avatar">
-									<img src="images/{{beer}}.png" class="circle">
-									<span class="title">{{name}}</span>
-									<span class="badge">{{count}}</span>
-								</li>
-								{{/each}}
-							</ul>
+			<div class="ui card">
+				<div class="image">
+					{{#with winningBeer totals}}
+					<img src="{{image}}">
+					{{/with}}
+				</div>
+				<div class="content">
+					{{#with winningBeer totals}}
+					<div class="header">{{name}}</div>
+					{{/with}}
+					<div class="meta">{{formatDate date 'MMM Do YYYY @ h:mma'}}</div>
+					<div class="description">
+						<!--{{#beerCollection beers=../beers imgsize='avatar' header='Vote totals'}}-->
+						{{#beerCollection beers=(beerTotals ../beers totals) imgsize='avatar' header='Vote totals'}}
+						<div class="ui label">
+							<!--{{total ../totals}}-->
+							{{beer.total}}
 						</div>
+						{{/beerCollection}}
 					</div>
 				</div>
+			</div>
 			{{/each}}
 		</div>
 	</div>
-	{{> groupSettings}}
 </template>

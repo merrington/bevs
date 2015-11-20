@@ -1,13 +1,55 @@
 <template name="beerCollection">
-	<ul class="collection with-header">
-		<li class="collection-header"><h6>{{header}}</h6></li>
+	<h5>{{header}}</h5>
+	<div class="ui divided list">
 		{{#each beers}}
-		<li class="collection-item avatar">
-			<img src="{{image}}" alt="" class="circle">
-			<span class="title">{{name}}</span>
-			<p>{{style}}</p>
-			<a href="" class="secondary-content {{../action}}BeerBtn"><i class="material-icons">{{../icon}}</i></a>
-		</li>
+		<div class="item">
+			<div class="right floated content">
+				{{> Template.contentBlock beer=this}}
+			</div>
+			{{#if image}}
+			<img src="{{image}}" alt="" class="ui {{../imgsize}} circular image">
+			{{else}}
+			<img src="/images/blank.jpg" alt="" class="ui {{../imgsize}} circular image">
+			{{/if}}
+			<div class="content">
+				<div class="header">
+					{{name}}
+				</div>
+				{{style}}
+			</div>
+		</div>
 		{{/each}}
-	</ul>
+	</div>
+</template>
+
+<template name="old-beerCollection">
+	<h5>{{header}}</h5>
+	<div class="ui divided list">
+		{{#each beers}}
+		<div class="item">
+			<div class="right floated content">
+				{{#rightContent addBeers}}
+					{{> addRemoveBeers icon='add square' action='add'}}
+				{{/rightContent}}
+				<i class="icon big link {{../icon}} {{../action}}BeerBtn"></i>
+			</div>
+			{{#if image}}
+			<img src="{{image}}" alt="" class="ui tiny circular image">
+			{{else}}
+			<img src="/images/blank.jpg" alt="" class="ui tiny circular image">
+			{{/if}}
+			<div class="content">
+				<div class="header">
+					{{name}}
+				</div>
+				{{style}}
+			</div>
+		</div>
+		{{/each}}
+	</div>
+</template>
+
+
+<template name="addRemoveBeers">
+	<i class="icon big link {{icon}} {{action}}BeerBtn"></i>
 </template>
