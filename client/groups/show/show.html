@@ -60,14 +60,15 @@
 					{{/with}}
 					<div class="meta">{{formatDate date 'MMM Do YYYY @ h:mma'}}</div>
 					<div class="description">
-						<!--{{#beerCollection beers=../beers imgsize='avatar' header='Vote totals'}}-->
-						{{#beerCollection beers=(beerTotals ../beers totals) imgsize='avatar' header='Vote totals'}}
+						{{#beerCollection beers=(beerTotals ../beers) imgsize='avatar' header='Vote totals'}}
 						<div class="ui label">
-							<!--{{total ../totals}}-->
 							{{beer.total}}
 						</div>
 						{{/beerCollection}}
 					</div>
+				</div>
+				<div class="extra content">
+					<i class="trophy icon"></i>{{winner}}
 				</div>
 			</div>
 			{{/each}}

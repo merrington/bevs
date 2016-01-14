@@ -5,7 +5,10 @@ GroupView.showVoteModal = function() {
 		'observeChanges': true
 	}).modal({
 		onApprove: function() {
-			//TODO: quick check that total # of votes < their vote count
+			// set the loading status on the button
+			$('#votingButtonLoader').addClass('active').removeClass('disabled');
+			$('#votingButton').addClass('disabled');
+
 			var votes = [], beers = Groups.findOne().beers;
 			beers.forEach(function(beer) {
 				votes.push({
@@ -15,7 +18,19 @@ GroupView.showVoteModal = function() {
 				})
 			});
 
-			var response = Meteor.call('castVote', votes, Groups.findOne());
+			Meteor.call('castVote', votes, Groups.findOne(), function(error, result) {
+				if (result.ok) {
+					$('#votingModal').modal('hide');
+					$('#votingModalErrorMessage').addClass('hidden');
+				} else {
+					$('#votingModalErrorMessage').removeClass('hidden');
+					Session.set('votingErrorMessage', result.message);
+				}
+				$('#votingButtonLoader').removeClass('active').addClass('disabled');
+				$('#votingButton').removeClass('disabled');
+			});
+
+			return false;
 		}
 	}).modal('show');
 }
@@ -74,10 +89,12 @@ Template.group.helpers({
 		return Groups.findOne({'voting.voted': Meteor.userId()});
 	},
 	votesCounted: function() {
-		return Groups.findOne().voting.voted.length + "/" + Groups.findOne().members.length;
+		var group = this;
+		return group.voting.voted.length + "/" + group.members.length;
 	},
 	majorityDisabled: function() {
-		if ((Groups.findOne().voting.voted.length / Groups.findOne().members.length) > 0.5) {
+		var group = this;
+		if (group.voting && (group.voting.voted.length / group.members.length) > 0.5) {
 			return;
 		}
 		return 'disabled';
@@ -104,11 +121,13 @@ Template.history.helpers({
 			return self.beer.id === total.id;
 		}).total;
 	},
-	beerTotals: function(beers, totals) {
+	beerTotals: function(beers) {
+		var totals = this.totals;
 		beers.forEach(function (beer) {
-			beer.total = _.find(totals, function(total) {
+			beerHistory = _.find(totals, function(total) {
 				return total.id == beer.id;
-			}).total;
+			});
+			beer.total = beerHistory && beerHistory.total || 0;
 		});
 
 		return beers.sort(function(beer1, beer2) {
@@ -120,5 +139,17 @@ Template.history.helpers({
 		return _.find(totals, function(total) {
 			return total.id === beer.id;
 		}).total;
+	},
+	winner: function() {
+		var history = this;
+		if (history.winner && history.winner.length === 1) {
+			if (history.winner[0].highestVote.length === 1) {
+				return Meteor.users.findOne({'_id': history.winner[0].highestVote[0].user}).profile.name;
+			} else {
+				return 'Vote tie!';
+			}
+		} else {
+			return 'Beer tie!';
+		}
 	}
 });

@@ -85,6 +85,8 @@ reload@1.1.4
 retry@1.0.4
 routepolicy@1.0.6
 sacha:spin@2.3.1
+sanjo:jasmine@0.16.2
+sanjo:karma@1.6.1
 sanjo:long-running-child-process@1.1.3
 sanjo:meteor-files-helpers@1.1.0_7
 sanjo:meteor-version@1.0.0
@@ -104,9 +106,11 @@ ui@1.0.8
 underscore@1.0.4
 url@1.0.5
 velocity:chokidar@1.2.0_1
+velocity:console-reporter@0.1.4
 velocity:core@0.10.8
 velocity:html-reporter@0.9.1
 velocity:meteor-internals@1.1.0_7
+velocity:meteor-stubs@1.1.1
 velocity:shim@0.1.0
 velocity:source-map-support@0.3.2_1
 webapp@1.2.3

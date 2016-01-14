@@ -37,3 +37,5 @@ semantic:ui-css
 mizzao:user-status
 alanning:roles
 momentjs:moment
+sanjo:jasmine
+velocity:console-reporter
