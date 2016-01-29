@@ -133,9 +133,12 @@ Meteor.methods({
 	},
 	'voting/assignVictoryPoints': function(group, highestVote) {
 		if (highestVote.length === 1) {
-			Groups.update({'_id': group._id, 'members.id': highestVote[0].user}, {$inc: {'members.$.points': 1}});
+			var victoryPoints = Groups.findOne({'_id': group._id}).nextVictoryPoints;
+			Groups.update({'_id': group._id, 'members.id': highestVote[0].user}, {$inc: {'members.$.points': victoryPoints}});
+			Groups.update({'_id': group._id}, {$set: {'nextVictoryPoints': 1}});
 		} else {
 			//TODO: Implement keeping track of victory points
+			Groups.update({'_id': group._id}, {$inc: {'nextVictoryPoints': 1}})
 		}
 	}
 });

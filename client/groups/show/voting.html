@@ -6,6 +6,9 @@
 				<div class="header"> Vote not cast </div>
 				{{votingErrorMessage}}
 			</div>
+			<div class="ui segment">
+				This vote is for <strong>{{../nextVictoryPoints}}</strong> point(s)
+			</div>
 			{{#beerCollection beers=sortedBeers header='' imgsize='tiny'}}
 				{{> beerItemVote beer=beer}}
 			{{/beerCollection}}
