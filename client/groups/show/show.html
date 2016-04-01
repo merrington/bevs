@@ -6,7 +6,8 @@
 	</div>
 	{{/if}}
 	<div class="ui center aligned container">
-		<div class="col s12">
+		<div class="ui grid">
+		<div class="eight wide column">
 			{{#if voting}}
 				<div class="center">
 					{{#if hasVoted}}
@@ -37,6 +38,10 @@
 			{{/if}}
 			{{> voting}}
 		</div>
+		<div class="eight wide column">
+			{{> leaderboard }}
+		</div>
+	</div>
 	</div>
 	{{> history}}
 

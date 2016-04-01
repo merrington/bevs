@@ -123,16 +123,28 @@ Template.history.helpers({
 	},
 	beerTotals: function(beers) {
 		var totals = this.totals;
-		beers.forEach(function (beer) {
-			beerHistory = _.find(totals, function(total) {
+		var newBeers = beers.map(function(beer, index) {
+			var beerHistory = _.find(totals, function(total) {
 				return total.id == beer.id;
 			});
 			beer.total = beerHistory && beerHistory.total || 0;
+			return beer;
 		});
 
-		return beers.sort(function(beer1, beer2) {
+		return newBeers.sort(function(beer1, beer2) {
 			return beer2.total - beer1.total;
 		});
+
+//		beers.forEach(function (beer) {
+//			beerHistory = _.find(totals, function(total) {
+//				return total.id == beer.id;
+//			});
+//			beer.total = beerHistory && beerHistory.total || 0;
+//		});
+//
+//		return beers.sort(function(beer1, beer2) {
+//			return beer2.total - beer1.total;
+//		});
 	},
 	total: function(totals) {
 		var beer = this.beer;

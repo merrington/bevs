@@ -1,0 +1,30 @@
+<template name="leaderboard">
+  <div>
+    <h1 class="ui header">Leaderboard</h1>
+    <table class="ui celled striped table">
+      <thead>
+        <tr>
+          <th>
+            Player
+          </th>
+          <th>
+            Points
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each sort ../members "points"}}
+      <tr>
+        <td>
+          {{> userAvatar id=id}}
+          {{> userName id=id}}
+        </td>
+        <td>
+          {{points}}
+        </td>
+      </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+</template>

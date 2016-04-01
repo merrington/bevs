@@ -9,3 +9,7 @@ Template.registerHelper('formatDate', function(date, format) {
 	}
 	return moment.unix(date).format(format);
 });
+
+Template.registerHelper("sort", function(list, sortBy){
+	return _.sortBy(list, sortBy).reverse()
+});

@@ -4,6 +4,7 @@
 		{{#each beers}}
 		<div class="item">
 			<div class="right floated content">
+				{{log}}
 				{{> Template.contentBlock beer=this}}
 			</div>
 			{{#if image}}
