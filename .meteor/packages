@@ -39,3 +39,4 @@ alanning:roles
 momentjs:moment
 sanjo:jasmine
 velocity:console-reporter
+force-ssl
