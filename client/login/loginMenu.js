@@ -3,7 +3,7 @@ Template.loginMenu.events({
 		Meteor.loginWithGoogle({
 			'requestPermissions': ['openid', 'profile', 'email'],
 			'loginStyle': 'popup',
-			'redirectUrl': Meteor.absoluteUrl({'path': 'http://localhost:3000/_oauth/google'})
+			'redirectUrl': Meteor.absoluteUrl({'path': 'https://localhost:3000/_oauth/google'})
 		});
 	},
 
