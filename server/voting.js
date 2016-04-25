@@ -110,13 +110,21 @@ Meteor.methods({
 
 		totals = _.sortBy(totals, 'total').reverse();
 
-		winner = [ totals[0] ];
-		if (totals[1] && totals[1].total == winner.total) {
-			winner = [
-				winner,
-				totals[1]
-			]
-		}
+		let winner = [];
+		totals.forEach((total) => {
+			if (winner.length === 0) {
+				winner = total;
+			} else if (winner.total === total.total) {
+				winner.push(total);
+			}
+		});
+//		winner = [ totals[0] ];
+//		if (totals[1] && totals[1].total == winner.total) {
+//			winner = [
+//				winner,
+//				totals[1]
+//			]
+//		}
 
 		return {
 			winner: winner,

@@ -1,0 +1,21 @@
+<template name="add">
+	<div class="row">
+		<div class="column">
+      <div class="ui negative message hidden" id="newGroupErrorMessage">
+        <i class="close icon"></i>
+        <div class="header">
+          Sorry
+        </div>
+        <p>There was an error trying to create the group, please try again!</p>
+      </div>
+			<div class="ui center aligned container">
+				<div class="ui big buttons">
+					<a class="ui primary button disabled">Join a Group</a>
+					<div class="or"></div>
+					<a class="ui primary button" id="newGroupButton">Start a Group</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{> newGroup}}
+</template>

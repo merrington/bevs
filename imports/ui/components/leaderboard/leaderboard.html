@@ -13,14 +13,14 @@
         </tr>
       </thead>
       <tbody>
-      {{#each sort ../members "points"}}
+      {{#each member in sortedMembers}}
       <tr>
         <td>
-          {{> userAvatar id=id}}
-          {{> userName id=id}}
+          <img class="ui middle aligned mini circular image" src="{{member.profile.image}}"/>
+          {{member.profile.name}}
         </td>
         <td>
-          {{points}}
+          {{member.points}}
         </td>
       </tr>
       {{/each}}

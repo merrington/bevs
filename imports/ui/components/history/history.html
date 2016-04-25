@@ -1,0 +1,32 @@
+<template name="history">
+	<h1 class="ui header">History</h1>
+	<div class="row">
+		<div class="ui cards">
+			{{#each history}}
+			<div class="ui card">
+				<div class="image">
+					{{#with winningBeer totals}}
+					<img src="{{image}}">
+					{{/with}}
+				</div>
+				<div class="content">
+					{{#with winningBeer totals}}
+					<div class="header">{{name}}</div>
+					{{/with}}
+					<div class="meta">{{formatDate date 'MMM Do YYYY @ h:mma'}}</div>
+					<div class="description">
+						{{#beerCollection beers=(beerTotals ../beers) imgsize='avatar' header='Vote totals'}}
+						<div class="ui label">
+							{{beer.total}}
+						</div>
+						{{/beerCollection}}
+					</div>
+				</div>
+				<div class="extra content">
+					<i class="trophy icon"></i>{{winner}}
+				</div>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+</template>

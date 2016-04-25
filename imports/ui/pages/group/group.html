@@ -1,0 +1,25 @@
+<template name="group">
+  {{#if Template.subscriptionsReady}}
+  	<h1 class="ui header">{{group.name}}</h1>
+  	{{#if isOwner}}
+  	<div class="ui compact labeled icon button" id="groupSettingsButton">
+  		<i class="icon wrench"></i> Settings
+  	</div>
+  	{{/if}}
+  	<div class="ui center aligned container">
+  		<div class="ui grid">
+  		<div class="eight wide column">
+        {{> voting group}}
+  		</div>
+  		<div class="eight wide column">
+  			{{> leaderboard group=group}}
+  		</div>
+  	</div>
+  	</div>
+  	{{> history group}}
+
+  	{{> groupSettings}}
+  {{else}}
+    Loading...
+  {{/if}}
+</template>

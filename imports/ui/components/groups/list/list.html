@@ -1,0 +1,25 @@
+<template name="list">
+	<div class="row">
+		<div class="column">
+			{{#if groups}}
+			<table class="ui striped table">
+				<thead>
+					<tr><th colspan="2">Groups</th></tr>
+				</thead>
+				<tbody>
+					{{#each group in groups}}
+					<tr>
+						<td><a href="{{pathFor route='/groups/:id' id=group._id}}">{{group.name}}</a></td>
+						<td class="collapsing"><div class="ui label">{{points group}} points</div></td>
+					</tr>
+					{{/each}}
+				</tbody>
+			</table>
+			{{else}}
+			<div class="ui center aligned container">
+				<p>You don't appear to be a part of any groups - join or create one using the buttons below!</p>
+			</div>
+			{{/if}}
+		</div>
+	</div>
+</template>
