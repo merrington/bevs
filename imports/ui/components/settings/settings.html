@@ -8,7 +8,7 @@
 				<a class="item" data-tab="settingsUsersTab">Members</a>
 			</div>
 			<div class="ui bottom attached tab segment active" data-tab="settingsBeerTab">
-				{{> settingsBeerTab}}
+				{{> beerSettings}}
 			</div>
 			<div class="ui bottom attached tab segment" data-tab="settingsPointsTab">
 				{{> settingsPointsTab}}
@@ -23,47 +23,6 @@
 	</div>
 </template>
 
-<template name="settingsBeerTab">
-	<div class="ui two column stackable divided grid">
-		<div class="row">
-			<div class="column">
-				{{#beerCollection beers=beers header='Selected Beers' imgsize='tiny'}}
-					{{> addRemoveBeers icon='trash' action='delete' beer=beer}}
-				{{/beerCollection}}
-			</div>
-			<div class="column">
-				<div class="row">
-					<div class="column">
-						<h5>Add a Beer</h5>
-						<div class="ui icon input fluid">
-							<input id="searchInput" type="text" placeholder="Search...">
-							<i class="circular search link icon" id="searchBtn"></i>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="column">
-						<div id="beerResultsDiv">
-							{{#if searched "searched"}}
-								{{#beerCollection beers=beerResults header='Search Results' imgsize='tiny'}}
-									{{> addRemoveBeers icon='add square' action='add' beer=beer}}
-								{{/beerCollection}}
-							{{/if}}
-							{{#if searched 0}}
-							<div class="ui center aligned container">
-								<h5>0 results</h5>
-							</div>
-							{{/if}}
-							{{#if searched "searching"}}
-							{{> loading loadingText='Searching'}}
-							{{/if}}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</template>
 
 <template name="settingsPointsTab">
 	<form class="ui form">

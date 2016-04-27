@@ -1,0 +1,36 @@
+<template name="voting">
+  {{#if group.voting}}
+    {{> votingModal group=group}}
+  <div class="center">
+    {{#if hasVoted}}
+      {{> hasVoted}}
+    {{else}}
+    <h3>Voting in progress...</h3>
+    <a class="ui primary button" data-trigger="votingModal" id="castVote">Cast vote</a>
+    {{/if}}
+  </div>
+  {{else}}
+  <div class="center">
+    <h5>Currently no voting in progress</h5>
+    <a class="ui primary button" id="startVote">Start a vote</a>
+  </div>
+  {{/if}}
+  {{> votingOld}}
+</template>
+
+<template name="hasVoted">
+  <div class="ui positive message">
+    <div class="header">
+      Vote recorded
+    </div>
+    <p>Thanks for voting!</p>
+    <div class="ui animated blue {{majorityDisabled}} button" id="closeVote">
+      <div class="visible content">
+        {{votesCounted}} votes submitted
+      </div>
+      <div class="hidden content">
+        Close voting
+      </div>
+    </div>
+  </div>
+</template>

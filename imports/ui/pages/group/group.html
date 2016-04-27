@@ -8,17 +8,17 @@
   	{{/if}}
   	<div class="ui center aligned container">
   		<div class="ui grid">
-  		<div class="eight wide column">
-        {{> voting group}}
-  		</div>
-  		<div class="eight wide column">
-  			{{> leaderboard group=group}}
-  		</div>
-  	</div>
-  	</div>
-  	{{> history group}}
+        <div class="eight wide column">
+          {{> voting group=group}}
+        </div>
+        <div class="eight wide column">
+          {{> leaderboard group=group}}
+        </div>
+      </div>
+    </div>
+  	{{> history group=group}}
 
-  	{{> groupSettings}}
+  	{{> groupSettings group=group}}
   {{else}}
     Loading...
   {{/if}}

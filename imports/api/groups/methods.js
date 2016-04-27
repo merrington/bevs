@@ -33,6 +33,19 @@ export const updateGroupSettings = new ValidatedMethod({
   }
 });
 
+export const startVote = new ValidatedMethod({
+  name: 'groups.startVote',
+  validate: null,
+  run({groupId}) {
+    let group = Groups.findOne({'_id': groupId}), voting = {
+      votes: [],
+      voted: []
+    }
+    Groups.update(groupId, {$set: {voting: voting}});
+    return true;
+  }
+})
+
 
 
 

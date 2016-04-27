@@ -3,7 +3,6 @@ import { Meteor } from 'meteor/meteor';
 
 import './leaderboard.html';
 
-
 Template.leaderboard.onCreated(() => {
     let instance = Template.instance();
     instance.autorun(() => {

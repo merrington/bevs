@@ -1,3 +1,8 @@
+import { Template } from 'meteor/templating';
+
+import './settings.html';
+import './beerSettings/beerSettings.js';
+
 Template.groupSettings.events({
 });
 
@@ -43,4 +48,3 @@ Template.groupSettings.onRendered(function() {
 		}
 	});
 })
-

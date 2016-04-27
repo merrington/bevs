@@ -1,4 +1,4 @@
-Template.voting.helpers({
+Template.votingOld.helpers({
 	sortedBeers: function() {
 		var beers = this.beers;
 		if (beers) {

@@ -7,7 +7,7 @@ import './list.html';
 Template.list.onCreated(() => {
   let instance = Template.instance();
   instance.autorun(() => {
-    instance.subscribe('groups');
+    instance.subscribe('groups.user');
   });
 });
 

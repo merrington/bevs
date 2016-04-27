@@ -5,23 +5,35 @@ import { Groups } from '/imports/api/groups/groups.js';
 
 import './group.html';
 
-import '../../components/history/history.js';
+import '../../components/settings/settings.js';
+import '../../components/voting/voting.js';
 import '../../components/leaderboard/leaderboard.js';
+import '../../components/history/history.js';
 
 Template.group.onCreated(() => {
   let instance = Template.instance();
+  let groupId = FlowRouter.getParam('id');
 
   instance.autorun(() => {
-    instance.subscribe('groups');
+    instance.subscribe('groups.id', groupId);
+    instance.data.group = Groups.findOne({_id: groupId});
   });
 });
 
 Template.group.helpers({
   group() {
-    let groupId = FlowRouter.getParam('id');
-    return Groups.findOne({_id: groupId});
+    return Groups.findOne();
+  },
+  isOwner() {
+		return Roles.userIsInRole(Meteor.user(), ['owner'], Template.instance().data.group._id);
   }
 });
+
+Template.group.events({
+  'click #groupSettingsButton'(event) {
+
+  }
+})
 
 GroupView = {};
 
@@ -60,43 +72,6 @@ GroupView.showVoteModal = function() {
 	}).modal('show');
 }
 
-
-Template.group.events({
-	'click #startVote': function(event) {
-		Meteor.call('startVote', Groups.findOne(), function(error, result) {
-			if (error) {
-				console.log(error);
-			} else {
-				GroupView.showVoteModal();
-			}
-		});
-	},
-	'click #castVote': function(event) {
-		GroupView.showVoteModal();
-	},
-	'click #closeVote': function(event) {
-		Meteor.call('closeVote', Groups.findOne());
-	},
-	'click #groupSettingsButton': function(event) {
-		$('#groupSettingsModal').modal({'observeChanges': true})
-		.modal({
-			onApprove: function() {
-				var newSettings = {
-					'points': {
-						'starterPoints': parseInt($('#starterPoints').val()),
-						'refreshPoints': parseInt($('#refreshPoints').val()),
-						'seasonWinPoints': parseInt($('#seasonWinPoints').val()),
-						'forValue': parseFloat($('#forValue').val()),
-						'againstValue': parseFloat($('#againstValue').val()),
-						'loserVpBonus': parseFloat($('#loserVpBonus').val()),
-					}
-				}
-				Meteor.call('updateGroupSettings', Groups.findOne()._id, newSettings);
-			}
-		}).modal('show');
-	}
-});
-
 Template.group.onRendered(function() {
 	var voting = this.data && this.data.voting;
 	if (voting) {
@@ -107,12 +82,6 @@ Template.group.onRendered(function() {
 });
 
 Template.group.helpers({
-	isOwner: function() {
-		return Roles.userIsInRole(Meteor.user(), ['owner'], this._id);
-	},
-	hasVoted: function() {
-		return Groups.findOne({'voting.voted': Meteor.userId()});
-	},
 	votesCounted: function() {
 		var group = this;
 		return group.voting.voted.length + "/" + group.members.length;
