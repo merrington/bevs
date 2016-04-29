@@ -15,6 +15,8 @@ Accounts.onCreateUser(function(options, user) {
 	if (user.services.google) {
 		user.profile.image = user.services.google.picture;
 		user.profile.given_name = user.services.google.given_name;
+		user.profile.family_name = user.services.google.family_name;
+    user.username = user.services.google.email;
 	}
 	return user;
 })

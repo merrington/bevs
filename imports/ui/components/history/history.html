@@ -1,32 +1,35 @@
 <template name="history">
-	<h1 class="ui header">History</h1>
+	<h2>History</h2>
 	<div class="row">
-		<div class="ui cards">
-			{{#each history}}
-			<div class="ui card">
-				<div class="image">
-					{{#with winningBeer totals}}
-					<img src="{{image}}">
-					{{/with}}
-				</div>
-				<div class="content">
-					{{#with winningBeer totals}}
-					<div class="header">{{name}}</div>
-					{{/with}}
-					<div class="meta">{{formatDate date 'MMM Do YYYY @ h:mma'}}</div>
-					<div class="description">
-						{{#beerCollection beers=(beerTotals ../beers) imgsize='avatar' header='Vote totals'}}
-						<div class="ui label">
-							{{beer.total}}
-						</div>
-						{{/beerCollection}}
-					</div>
-				</div>
-				<div class="extra content">
-					<i class="trophy icon"></i>{{winner}}
+			{{#each log in group.history}}
+				{{> historyDetails history=log}}
+			{{/each}}
+	</div>
+</template>
+
+<template name="historyDetails">
+	<div class="col-xs-6 col-md-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="panel-title">
+				{{#if singleWinner history.winningUser}}
+					<i class="fa fa-trophy"></i> {{winner history.winningUser}}
+				{{else}}
+					Vote tie!
+				{{/if}}
 				</div>
 			</div>
-			{{/each}}
+			<div class="panel-body">
+				<img class="img-rounded img-responsive" src="{{history.winningBeer.image}}" />
+				{{> beerCollection beers=history.votes action="voteCount" small=true}}
+			</div>
+			<div class="panel-footer">
+				{{date history.date}}
+			</div>
 		</div>
 	</div>
+</template>
+
+<template name="voteCount">
+	{{total}}
 </template>

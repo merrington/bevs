@@ -16,7 +16,6 @@ Template.group.onCreated(() => {
 
   instance.autorun(() => {
     instance.subscribe('groups.id', groupId);
-    instance.data.group = Groups.findOne({_id: groupId});
   });
 });
 
@@ -25,15 +24,9 @@ Template.group.helpers({
     return Groups.findOne();
   },
   isOwner() {
-		return Roles.userIsInRole(Meteor.user(), ['owner'], Template.instance().data.group._id);
+		return Roles.userIsInRole(Meteor.user(), ['owner'], Groups.findOne()._id);
   }
 });
-
-Template.group.events({
-  'click #groupSettingsButton'(event) {
-
-  }
-})
 
 GroupView = {};
 

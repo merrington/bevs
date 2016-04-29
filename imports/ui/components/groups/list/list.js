@@ -13,6 +13,7 @@ Template.list.onCreated(() => {
 
 Template.list.helpers({
   'groups': function() {
+    console.log(Groups.find().fetch());
     return Groups.find();
   },
 	'points': function(group) {

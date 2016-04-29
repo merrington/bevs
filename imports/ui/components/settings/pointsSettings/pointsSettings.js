@@ -1,0 +1,1 @@
+import './pointsSettings.html';

@@ -1,50 +1,51 @@
 import { Template } from 'meteor/templating';
+import { Mongo } from 'meteor/mongo';
+
+import { Groups } from '/imports/api/groups/groups.js';
+
+import { updateGroupSettings } from '/imports/api/groups/methods.js';
 
 import './settings.html';
 import './beerSettings/beerSettings.js';
+import './pointsSettings/pointsSettings.js';
+import './membersSettings/membersSettings.js';
+
+Template.groupSettings.onCreated(() => {
+	const instance = Template.instance();
+	let beerDB = new Mongo.Collection(null);
+
+	instance.autorun(() => {
+		if (instance.data.group.beers) {
+			instance.data.group.beers.forEach((beer) => {
+				beerDB.insert(beer);
+			});
+		}
+		instance.beerDB = beerDB;
+	})
+})
+
+Template.groupSettings.helpers({
+	beers() {
+		return Template.instance().beerDB;
+	}
+})
 
 Template.groupSettings.events({
-});
+	'click #saveSettings'(event) {
+		let instance = Template.instance();
+		let group = {};
 
-Template.settingsBeerTab.events({
-	'click .addBeerBtn': function(event) {
-		Groups.update({'_id': Template.parentData(1)._id}, {$addToSet: {'beers': this.beer}});
-	},
-	'click .deleteBeerBtn': function(event) {
-		Groups.update({'_id': Template.parentData(1)._id}, {$pull: {'beers': this.beer}});
-	},
-	'click #searchBtn, keypress #searchInput': function(event) {
-		if (event.type === 'click' || event.which === 13) {
-			Meteor.call('searchBDB', $('#searchInput').val(), function(error, result) {
-				if (error) {
-					console.log(error);
-				} else {
-					if (result.length === 0) {
-						Session.set('searched', 0);
-					} else {
-						Session.set('beerResults', result);
-						Session.set('searched', "searched");
-					}
-				}
-			});
-			Session.set('searched', "searching");
+		group.beers = instance.beerDB.find({}, {sort: {name: 1}, fields: {_id: false}}).fetch();
+		group.points = {
+			starterPoints: parseInt($('#starterPoints').val()),
+			refreshPositiveVotes: parseInt($('#refreshPositiveVotes').val()),
+			refreshNegativeVotes: parseInt($('#refreshNegativeVotes').val()),
+			seasonWinPoints: parseInt($('#seasonWinPoints').val()),
+			positiveValue: $('#positiveValue').val(),
+			negativeValue: $('#negativeValue').val(),
+			loserVpBonus: parseInt($('#loserVpBonus').val())
 		}
-	},
-})
 
-Template.settingsBeerTab.helpers({
-	searched: function(value) {
-		return Session.get('searched') === value;
-	},
-	beerResults: function() {
-		return Session.get('beerResults');
+		updateGroupSettings.call({groupId: instance.data.group._id, settings: group});
 	}
 });
-
-Template.groupSettings.onRendered(function() {
-	$('#groupSettingsModal > div.content > div.ui.top.attached.tabular.menu .item').tab({
-		onLoad: function() {
-			$('#groupSettingsModal').modal('refresh');
-		}
-	});
-})

@@ -1,62 +1,40 @@
 <template name="groupSettings">
-	<div class="ui modal long" id="groupSettingsModal">
-		<div class="header">Settings</div>
-		<div class="content">
-			<div class="ui top attached tabular menu">
-				<a class="active item" data-tab="settingsBeerTab">Beer Selection</a>
-				<a class="item" data-tab="settingsPointsTab">Points</a>
-				<a class="item" data-tab="settingsUsersTab">Members</a>
+	{{#if Template.subscriptionsReady}}
+	<div class="modal fade" id="groupSettingsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Settings</h4>
+				</div>
+				<div class="modal-body">
+
+					<div>
+						<ul class="nav nav-tabs" role="tablist">
+							<li role="presentation" class="active"> <a href="#beerSettings" data-toggle="tab">Beers</a> </li>
+							<li role="presentation"> <a href="#pointsSettings" data-toggle="tab">Points</a> </li>
+							<li role="presentation"> <a href="#membersSettings" data-toggle="tab">Members</a> </li>
+						</ul>
+
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="beerSettings">
+								{{> beerSettings beerDB=beers}}
+							</div>
+							<div role="tabpanel" class="tab-pane" id="pointsSettings">
+								{{> pointsSettings points=group.points}}
+							</div>
+							<div role="tabpanel" class="tab-pane" id="membersSettings">
+								{{> membersSettings}}
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="saveSettings">Save changes</button>
+				</div>
 			</div>
-			<div class="ui bottom attached tab segment active" data-tab="settingsBeerTab">
-				{{> beerSettings}}
-			</div>
-			<div class="ui bottom attached tab segment" data-tab="settingsPointsTab">
-				{{> settingsPointsTab}}
-			</div>
-			<div class="ui bottom attached tab segment" data-tab="settingsUsersTab">
-				{{> settingsUsersTab}}
-			</div>
-		</div>
-		<div class="actions">
-			<a id="acceptSettingsBtn" class="ui ok button">Accept</a>
 		</div>
 	</div>
-</template>
-
-
-<template name="settingsPointsTab">
-	<form class="ui form">
-		<div class="three fields">
-			<div class="field">
-				<label>New User Points</label>
-				<input id="starterPoints" type="number" min="0" value="{{points.starterPoints}}"/>
-			</div>
-			<div class="field">
-				<label for="refreshPoints">Refresh Points</label>
-				<input id="refreshPoints" type="number" min="1" value="{{points.refreshPoints}}"/>
-			</div>
-			<div class="field">
-				<label>End season at <i>"X"</i> victory points</label>
-				<input id="seasonWinPoints" type="number" min="1" value="{{points.seasonWinPoints}}"/>
-			</div>
-		</div>
-		<div class="three fields">
-			<div class="field">
-				<label>Value of a "for" point</label>
-				<input id="forValue" type="number" min="0" value="{{points.forValue}}"/>
-			</div>
-			<div class="field">
-				<label>Value of an "against" point</label>
-				<input id="againstValue" type="number" max="-0.1" value="{{points.againstValue}}"/>
-			</div>
-			<div class="field">
-				<label>V.P. bonus for losing beers</label>
-				<input id="loserVpBonus" type="number" min="0" value="{{points.loserVpBonus}}"/>
-			</div>
-		</div>
-	</form>
-</template>
-
-<template name="settingsUsersTab">
-	{{> userCollection}}
+	{{/if}}
 </template>
