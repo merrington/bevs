@@ -1,0 +1,21 @@
+<template name="leaderboard">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">Leaderboard</h2>
+    </div>
+    <ul class="list-group" id="leaderboard-accordion">
+      {{#each member in sortedMembers}}
+        <a class="list-group-item" href="#{{member._id}}-collapse" data-toggle="collapse">
+          <img class="img-circle" src="{{member.profile.image}}" style="vertical-align: middle; width: 100px;"/>
+          <h4 style="display: inline;">{{member.profile.name}}</h4>
+          <h4 class="pull-right" style="display: inline;"> {{member.points}}</h4>
+        </a>
+        <div id="{{member._id}}-collapse" class="panel-collapse collapse">
+          <div class="panel-body">
+            Stuff coming here soon!
+          </div>
+        </div>
+      {{/each}}
+    </ul>
+  </div>
+</template>

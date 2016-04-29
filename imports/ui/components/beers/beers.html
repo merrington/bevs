@@ -1,0 +1,33 @@
+<template name="beerCollection">
+  <h5>{{header}}</h5>
+  <ul class="list-group">
+    {{#each beer in beers}}
+    <li class="list-group-item">
+      <div class="row">
+        <div class="col-xs-12 col-md-10">
+          <div class="media">
+            <div class="media-left">
+              {{#if beer.image}}
+              <img src="{{beer.image}}" class="img-circle media-object" style="width: {{#if small}} 45px; {{else}} 90px; {{/if}}">
+              {{else}}
+              <img src="/images/blank.jpg" class="img-circle media-object" style="width: {{#if small}} 45px; {{else}} 90px; {{/if}}">
+              {{/if}}
+            </div>
+            <div class="media-body">
+              {{#if small}}
+                {{beer.name}}<br/>
+              {{else}}
+                <h4 class="media-heading">{{beer.name}}</h4>
+              {{/if}}
+              {{beer.style}}
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6 col-md-2">
+          {{> Template.dynamic template=action data=beer}}
+        </div>
+      </div>
+    </li>
+    {{/each}}
+  </ul>
+</template>

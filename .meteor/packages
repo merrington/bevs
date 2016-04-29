@@ -12,15 +12,12 @@ session                 # Client-side reactive dictionary for your app
 jquery                  # Helpful client-side library
 tracker                 # Meteor's client-side reactive programming library
 
-standard-minifiers      # JS/CSS minifiers run for production mode
 es5-shim                # ECMAScript 5 compatibility for older browsers.
 ecmascript              # Enable ECMAScript2015+ syntax in app code
 
-insecure                # Allow all DB writes from clients (for prototyping)
 accounts-base
 accounts-google
 underscore
-iron:router
 aldeed:autoform
 fortawesome:fontawesome
 sacha:spin
@@ -31,12 +28,18 @@ accounts-ui
 service-configuration
 xolvio:cucumber
 http
-semantic:ui
 flemay:less-autoprefixer
-semantic:ui-css
 mizzao:user-status
 alanning:roles
-momentjs:moment
 sanjo:jasmine
 velocity:console-reporter
 force-ssl
+standard-minifier-css
+standard-minifier-js
+kadira:flow-router
+kadira:blaze-layout
+modules
+arillo:flow-router-helpers
+mdg:validated-method
+reactive-dict
+mdg:validation-error

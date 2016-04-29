@@ -1,0 +1,51 @@
+<template name="beerSettings">
+		<div class="row">
+      <div class="col-xs-12 col-md-6">
+				{{>beerCollection beers=beers header='Selected Beers' action="deleteBeerAction"}}
+      </div>
+      <div class="col-xs-12 col-md-6">
+				<div class="row">
+					<div class="col-xs-12">
+						<h5>Add a Beer</h5>
+            <div class="form-group">
+              <label for="searchInput">Search</label>
+              <div class="input-group">
+                <input id="searchInput" class="form-control" type="text" placeholder="Creemore Springs">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" id="searchBtn"><i class="fa fa-search"></i></button>
+                </span>
+              </div>
+            </div>
+						<div class="ui icon input fluid">
+							<i class="circular search link icon" id="searchBtn"></i>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="beerResultsDiv">
+							{{#if searched "searched"}}
+								{{> beerCollection beers=beerResults header='Search Results' action="addBeerAction"}}
+							{{/if}}
+							{{#if searched 0}}
+							<div class="ui center aligned container">
+								<h5>0 results</h5>
+							</div>
+							{{/if}}
+							{{#if searched "searching"}}
+							{{> loading loadingText='Searching'}}
+							{{/if}}
+						</div>
+					</div>
+				</div>
+      </div>
+		</div>
+</template>
+
+<template name="addBeerAction">
+	<button type="button" class="btn btn-success" id="addBeer" data-id="{{id}}"><i class="fa fa-plus"></i></button>
+</template>
+
+<template name="deleteBeerAction">
+	<button type="button" class="btn btn-danger" id="deleteBeer" data-id="{{id}}"><i class="fa fa-minus"></i></button>
+</template>

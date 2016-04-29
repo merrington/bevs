@@ -1,0 +1,20 @@
+<template name="add">
+	<div class="row">
+		<div class="col-xs-12 col-md-6 col-md-offset-3 text-center">
+			<div class="center-block">
+				<div class="ui negative message hidden" id="newGroupErrorMessage">
+					<i class="close icon"></i>
+					<div class="header">
+						Sorry
+					</div>
+					<p>There was an error trying to create the group, please try again!</p>
+				</div>
+				<div class="btn-group" role="group">
+					<button type="button" class="btn btn-info">Join a Group</button>
+					<button type="button" class="btn btn-info" data-toggle="modal" data-target="#newGroupModal">Start a Group</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{> newGroup}}
+</template>

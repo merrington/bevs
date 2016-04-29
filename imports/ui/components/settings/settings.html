@@ -1,0 +1,40 @@
+<template name="groupSettings">
+	{{#if Template.subscriptionsReady}}
+	<div class="modal fade" id="groupSettingsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Settings</h4>
+				</div>
+				<div class="modal-body">
+
+					<div>
+						<ul class="nav nav-tabs" role="tablist">
+							<li role="presentation" class="active"> <a href="#beerSettings" data-toggle="tab">Beers</a> </li>
+							<li role="presentation"> <a href="#pointsSettings" data-toggle="tab">Points</a> </li>
+							<li role="presentation"> <a href="#membersSettings" data-toggle="tab">Members</a> </li>
+						</ul>
+
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="beerSettings">
+								{{> beerSettings beerDB=beers}}
+							</div>
+							<div role="tabpanel" class="tab-pane" id="pointsSettings">
+								{{> pointsSettings points=group.points}}
+							</div>
+							<div role="tabpanel" class="tab-pane" id="membersSettings">
+								{{> membersSettings}}
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="saveSettings">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	{{/if}}
+</template>

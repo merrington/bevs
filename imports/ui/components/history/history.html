@@ -1,0 +1,35 @@
+<template name="history">
+	<h2>History</h2>
+	<div class="row">
+			{{#each log in group.history}}
+				{{> historyDetails history=log}}
+			{{/each}}
+	</div>
+</template>
+
+<template name="historyDetails">
+	<div class="col-xs-6 col-md-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="panel-title">
+				{{#if singleWinner history.winningUser}}
+					<i class="fa fa-trophy"></i> {{winner history.winningUser}}
+				{{else}}
+					Vote tie!
+				{{/if}}
+				</div>
+			</div>
+			<div class="panel-body">
+				<img class="img-rounded img-responsive" src="{{history.winningBeer.image}}" />
+				{{> beerCollection beers=history.votes action="voteCount" small=true}}
+			</div>
+			<div class="panel-footer">
+				{{date history.date}}
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="voteCount">
+	{{total}}
+</template>
