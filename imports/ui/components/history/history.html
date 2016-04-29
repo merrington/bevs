@@ -1,7 +1,7 @@
 <template name="history">
 	<h2>History</h2>
 	<div class="row">
-			{{#each log in group.history}}
+			{{#each log in group.history.reverse}}
 				{{> historyDetails history=log}}
 			{{/each}}
 	</div>
