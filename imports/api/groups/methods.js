@@ -165,8 +165,12 @@ export const closeVote = new ValidatedMethod({
 
         //calculate the total
         let positiveTotal = 0, negativeTotal = 0;
-        positiveTotal = eval(group.points.positiveValue.replace('x', voteTally[vote.beer].positiveVotes));
-        negativeTotal = eval(group.points.negativeValue.replace('x', voteTally[vote.beer].negativeVotes));
+        if (voteTally[vote.beer].positiveVotes > 0) {
+          positiveTotal = eval(group.points.positiveValue.replace('x', voteTally[vote.beer].positiveVotes));
+        }
+        if (voteTally[vote.beer].negativeVotes > 0) {
+          negativeTotal = eval(group.points.negativeValue.replace('x', voteTally[vote.beer].negativeVotes));
+        }
         voteTally[vote.beer].total = positiveTotal - negativeTotal;
 
         if (voteTally[vote.beer].highestVotes.length === 0 || vote.positiveVotes === voteTally[vote.beer].highestVotes[0].votes) {
