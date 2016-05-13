@@ -75,6 +75,7 @@ Template.votingModal.events({
       positiveVotes: voteCounter.get('positiveVotes') || {},
       negativeVotes: voteCounter.get('negativeVotes') || {}
     }
+    console.log(Template.instance());
     castVote.call({vote, groupId: Template.instance().data.group._id}, function(error, result) {
       if (error) {
         console.log(error);

@@ -1,0 +1,11 @@
+<template name="vote">
+  <div class="row">
+    <div class="col-xs-12">
+      {{#if Template.subscriptionsReady}}
+        {{> voting group=group}}
+      {{else}}
+        Loading...
+      {{/if}}
+    </div>
+  </div>
+</template>

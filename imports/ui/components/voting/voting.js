@@ -8,6 +8,24 @@ import './voting.html';
 
 import './votingModal/votingModal.js';
 
+Template.voting.onRendered(() => {
+	let instance = Template.instance();
+	let oldHistoryLength = Groups.findOne().history.length;
+	instance.autorun(() => {
+		Groups.find({_id: instance.data.group._id}).observeChanges({
+			changed(id, fields) {
+				if (fields.history && fields.history.length > oldHistoryLength) {
+					//get the last item in the history and show the history panel for it
+					let result = fields.history[fields.history.length-1];
+					Blaze.renderWithData(Template.historyDetails, {history: result}, $('#resultDiv')[0]);
+					$('#resultDiv').addClass('animated tada')
+					oldHistoryLength = fields.history.length;
+				}
+			}
+		});
+	})
+});
+
 Template.voting.events({
 	'click #startVote'(event) {
     let instance = Template.instance();
@@ -34,5 +52,11 @@ Template.votedMessage.helpers({
 		let memberCount = Groups.findOne().members.length;
 		let votedCount = Groups.findOne().voting.voted.length;
 		return (votedCount / memberCount) * 100;
+	},
+	votingDisabled() {
+		return false;
+		let memberCount = Groups.findOne().members.length;
+		let votedCount = Groups.findOne().voting.voted.length;
+		return (votedCount / memberCount) < 0.5;
 	}
 })

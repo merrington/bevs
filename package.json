@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.6",
-    "moment": "^2.13.0"
+    "chart.js": "^2.1.0",
+    "moment": "^2.13.0",
+    "randomcolor": "^0.4.4"
   },
   "devDependencies": {},
   "scripts": {

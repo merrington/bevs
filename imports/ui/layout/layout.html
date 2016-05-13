@@ -1,6 +1,6 @@
 <template name="layout">
 	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container-fluid">
+		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
 					<span class="sr-only">Toggle navigation</span>
@@ -9,26 +9,43 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="{{ pathFor route='/'}}">
-					<i class="fa fa-beer"></i> BEVS <del>2.0</del> 1.5
+					<i class="fa fa-beer"></i> BEVS 2.0
 				</a>
 			</div>
 
 			<div class="navbar-collapse collapse" id="navbar">
 				<ul class="nav navbar-nav">
-					<li class="dropdown">
-						<ul class="dropdown-menu">
-							<li><a href="#">Action</a></li>
-						</ul>
-					</li>
+					{{#if inGroup}}
+					<li data-route="voting"> <a href="{{pathFor '/groups/:id/voting' id=groupId}}"> <i class="fa fa-list-ol"></i> Voting</a> </li>
+					<li data-route="history"> <a href="{{pathFor '/groups/:id/history' id=groupId}}"> <i class="fa fa-book"></i> History</a> </li>
+					<li data-route="leaderboard"> <a href="{{pathFor '/groups/:id/leaderboard' id=groupId}}"> <i class="fa fa-trophy"></i> Leaderboard</a> </li>
+					{{/if}}
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li>{{> loginMenu}}</li>
+					{{#if currentUser}}
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{currentUser.profile.name}}<span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									{{#if inGroup}}
+										<li class="dropdown-header">
+											<p class="text-success" style="display:inline;"><i class="fa fa-plus-square"></i> {{positiveVotes}}</p>
+											&nbsp;&nbsp;&nbsp;
+											<p class="text-danger" style="display:inline;"><i class="fa fa-minus-square"></i> {{negativeVotes}}</p>
+										</li>
+										<li role="separator" class="divider"></li>
+									{{/if}}
+									<li> {{> loginMenu}} </li>
+								</ul>
+						</li>
+					{{else}}
+						<li>{{> loginMenu}}</li>
+					{{/if}}
 				</ul>
 			</div><!-- /.navbar-collapse -->
 		</div><!-- /.container-fluid -->
 	</nav>
 
-	<div class="container-fluid">
+	<div class="container">
 		{{#if authInProcess}}
 			Logging in...
 		{{else}}

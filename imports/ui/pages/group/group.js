@@ -7,8 +7,8 @@ import './group.html';
 
 import '../../components/settings/settings.js';
 import '../../components/voting/voting.js';
-import '../../components/leaderboard/leaderboard.js';
-import '../../components/history/history.js';
+//import '../../components/leaderboard/leaderboard.js';
+//import '../../components/history/history.js';
 
 Template.group.onCreated(() => {
   let instance = Template.instance();
@@ -28,48 +28,10 @@ Template.group.helpers({
   }
 });
 
-GroupView = {};
-
-GroupView.showVoteModal = function() {
-	$('#votingModal').modal({
-		'observeChanges': true
-	}).modal({
-		onApprove: function() {
-			// set the loading status on the button
-			$('#votingButtonLoader').addClass('active').removeClass('disabled');
-			$('#votingButton').addClass('disabled');
-
-			var votes = [], beers = Groups.findOne().beers;
-			beers.forEach(function(beer) {
-				votes.push({
-					id: beer.id,
-					votesFor: parseInt($("input[name='votesFor'][data-beer='"+beer.id+"']").val()) || 0,
-					votesAgainst: parseInt($("input[name='votesAgainst'][data-beer='"+beer.id+"']").val()) || 0,
-				})
-			});
-
-			Meteor.call('castVote', votes, Groups.findOne(), function(error, result) {
-				if (result.ok) {
-					$('#votingModal').modal('hide');
-					$('#votingModalErrorMessage').addClass('hidden');
-				} else {
-					$('#votingModalErrorMessage').removeClass('hidden');
-					Session.set('votingErrorMessage', result.message);
-				}
-				$('#votingButtonLoader').removeClass('active').addClass('disabled');
-				$('#votingButton').removeClass('disabled');
-			});
-
-			return false;
-		}
-	}).modal('show');
-}
-
 Template.group.onRendered(function() {
 	var voting = this.data && this.data.voting;
 	if (voting) {
 		if (!_.find(voting.votes, function(vote) { return vote.userId === Meteor.userId(); })) {
-			//GroupView.showVoteModal();
 		}
 	}
 });

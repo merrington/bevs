@@ -1,0 +1,13 @@
+<template name="history">
+  <div class="row">
+    <div class="col-xs-12">
+      {{#if Template.subscriptionsReady}}
+  			{{#each log in group.history.reverse}}
+  				{{> historyDetails history=log}}
+  			{{/each}}
+      {{else}}
+        Loading...
+      {{/if}}
+    </div>
+  </div>
+</template>

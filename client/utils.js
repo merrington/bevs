@@ -1,5 +1,9 @@
-Template.registerHelper('log', function() {
-	console.log(this);
+Template.registerHelper('log', function(item) {
+	if (typeof item !== 'undefined') {
+		console.log('log item', item);
+	} else {
+		console.log('log', this);
+	}
 });
 
 Template.registerHelper('formatDate', function(date, format) {
