@@ -88,6 +88,7 @@ Template.leaderboard.onRendered(() => {
       let labels = instance.data.group.history.map((history) => {
         return moment(history.date).format('MMM DD');
       });
+      labels.splice(0, 0, moment(instance.data.group.history[0].date).format('MMM DD'));
 
       let graph = new Chart(canvas, {
         type: 'line',
