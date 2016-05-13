@@ -54,7 +54,9 @@ Template.votedMessage.helpers({
 		return (votedCount / memberCount) * 100;
 	},
 	votingDisabled() {
-		return false;
+		if (Meteor.settings.public && Meteor.settings.public.dev) {
+			return false;
+		}
 		let memberCount = Groups.findOne().members.length;
 		let votedCount = Groups.findOne().voting.voted.length;
 		return (votedCount / memberCount) < 0.5;
