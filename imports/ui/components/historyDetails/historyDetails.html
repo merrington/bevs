@@ -1,6 +1,7 @@
 <template name="historyDetails">
 	<div class="col-xs-6 col-md-3">
 		<div class="panel panel-default">
+		{{#if Template.subscriptionsReady}}
 			<div class="panel-heading">
 				<div class="panel-title">
 				{{#if singleWinner history.winningUser}}
@@ -21,6 +22,9 @@
 			<div class="panel-footer">
 				{{date history.date}}
 			</div>
+			{{else}}
+			Loading...
+			{{/if}}
 		</div>
 	</div>
 </template>
