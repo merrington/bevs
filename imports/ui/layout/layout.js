@@ -18,7 +18,7 @@ Template.layout.onRendered(() => {
 	instance.autorun(() => {
 		let name = FlowRouter.getRouteName();
 		let selector = `.nav li[data-route='${name}']`;
-		//console.log('Route name', selector);
+		console.log('Route name', selector, $(selector));
 		$('.nav li[class="active"]').removeClass('active');
 		$(selector).addClass('active');
 	});

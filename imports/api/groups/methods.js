@@ -146,7 +146,9 @@ export const closeVote = new ValidatedMethod({
   validate: null,
   run({groupId}) {
     function tallyVotes({group, votes}) {
+      //create an object to keep track of the positive/negative votes each beer gets, the overall total and the highest voter(s) for the beer
       let voteTally = {};
+      //add each beer in the group to the tally object, set all votes/totals to 0 by default
       group.beers.forEach((beer) => {
         voteTally[beer.id] = {
           beer: beer.id,
@@ -159,20 +161,26 @@ export const closeVote = new ValidatedMethod({
         }
       });
 
+      //iterate over every vote cast
       votes.forEach((vote) => {
+        //add either the number of positive votes for the beer, or 0 if there were no positive votes to the overall voteTally object, do the same for negative
         voteTally[vote.beer].positiveVotes += (vote.positiveVotes || 0);
         voteTally[vote.beer].negativeVotes += (vote.negativeVotes || 0);
 
-        //calculate the total
+        //start with 0 positive and 0 negative
         let positiveTotal = 0, negativeTotal = 0;
+        //if the beer has any positive votes - calculate the total positive for it
         if (voteTally[vote.beer].positiveVotes > 0) {
           positiveTotal = eval(group.points.positiveValue.replace('x', voteTally[vote.beer].positiveVotes));
         }
+        //if the beer has any positive votes - calculate the total negative for it
         if (voteTally[vote.beer].negativeVotes > 0) {
           negativeTotal = eval(group.points.negativeValue.replace('x', voteTally[vote.beer].negativeVotes));
         }
+        //get the overall total score for the beer
         voteTally[vote.beer].total = positiveTotal - negativeTotal;
 
+        //check for highest votes for winner
         if (voteTally[vote.beer].highestVotes.length === 0 || vote.positiveVotes === voteTally[vote.beer].highestVotes[0].votes) {
           voteTally[vote.beer].highestVotes.push({
             votes: vote.positiveVotes,
