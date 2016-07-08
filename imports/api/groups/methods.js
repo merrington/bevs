@@ -181,16 +181,18 @@ export const closeVote = new ValidatedMethod({
         voteTally[vote.beer].total = positiveTotal - negativeTotal;
 
         //check for highest votes for winner
-        if (voteTally[vote.beer].highestVotes.length === 0 || vote.positiveVotes === voteTally[vote.beer].highestVotes[0].votes) {
-          voteTally[vote.beer].highestVotes.push({
-            votes: vote.positiveVotes,
-            user: vote.user
-          });
-        } else if (voteTally[vote.beer].highestVotes.length > 0 && vote.positiveVotes > voteTally[vote.beer].highestVotes[0].votes) {
-          voteTally[vote.beer].highestVotes = [{
-            votes: vote.positiveVotes,
-            user: vote.user
-          }];
+        if (vote.positiveVotes > 0) {
+          if (voteTally[vote.beer].highestVotes.length === 0 || vote.positiveVotes === voteTally[vote.beer].highestVotes[0].votes) {
+            voteTally[vote.beer].highestVotes.push({
+              votes: vote.positiveVotes,
+              user: vote.user
+            });
+          } else if (voteTally[vote.beer].highestVotes.length > 0 && vote.positiveVotes > voteTally[vote.beer].highestVotes[0].votes) {
+            voteTally[vote.beer].highestVotes = [{
+              votes: vote.positiveVotes,
+              user: vote.user
+            }];
+          }
         }
       });
 
