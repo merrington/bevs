@@ -43,7 +43,9 @@ Template.leaderboard.onCreated(() => {
               date: history.date
             }
           }
-          return {};
+          return {
+            date: history.date
+          };
         }).forEach((history) => {
           if (history.hasOwnProperty('beer')) {
             stats[history.user].beers[history.beer] = (stats[history.user].beers[history.beer] || 0) + 1;
@@ -54,6 +56,11 @@ Template.leaderboard.onCreated(() => {
               } else {
                 stats[user].points.push(lastScore);
               }
+            })
+          } else {
+            Object.keys(stats).forEach((user) => {
+              let lastScore = stats[user].points[stats[user].points.length-1];
+              stats[user].points.push(lastScore)
             })
           }
         });
@@ -104,7 +111,7 @@ Template.leaderboard.onRendered(() => {
           stacked: true,
           scales: {
             yAxes: [{
-              id: 'y-axis-1', type: 'linear', display: true, ticks: {min: 0, max: 5, maxTicksLimit: 5}
+              id: 'y-axis-1', type: 'linear', display: true, ticks: {min: 0, max: instance.data.group.points.seasonWinPoints, maxTicksLimit: instance.data.group.points.seasonWinPoints}
             }]
           }
         }
