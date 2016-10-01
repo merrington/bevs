@@ -1,6 +1,7 @@
 accounts-base@1.2.7
 accounts-google@1.0.9
 accounts-oauth@1.1.12
+accounts-password@1.1.8
 accounts-ui@1.1.9
 accounts-ui-unstyled@1.1.12
 alanning:roles@1.2.15
@@ -32,6 +33,7 @@ diff-sequence@1.0.5
 ecmascript@0.4.3
 ecmascript-runtime@0.2.10
 ejson@1.0.11
+email@1.0.12
 es5-shim@4.5.10
 fastclick@1.0.11
 flemay:less-autoprefixer@1.2.0
@@ -68,6 +70,8 @@ modules-runtime@0.6.3
 momentjs:moment@2.13.1
 mongo@1.1.7
 mongo-id@1.0.4
+nimble:restivus@0.8.11
+npm-bcrypt@0.8.7_1
 npm-mongo@1.4.43
 oauth@1.1.10
 oauth2@1.1.9
@@ -92,8 +96,11 @@ sanjo:meteor-files-helpers@1.2.0_1
 sanjo:meteor-version@1.0.0
 service-configuration@1.0.9
 session@1.1.5
+sha@1.0.7
+simple:json-routes@2.1.0
 spacebars@1.0.11
 spacebars-compiler@1.0.11
+srp@1.0.8
 standard-minifier-css@1.0.6
 standard-minifier-js@1.0.6
 templating@1.1.9
