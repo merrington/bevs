@@ -105,7 +105,6 @@ export const castVote = new ValidatedMethod({
   run({vote, groupId}) {
     let self = this;
     let group = Groups.findOne({_id: groupId});
-    let votes = group.voting.votes;
 
     /*
     vote = {
@@ -223,6 +222,9 @@ export const closeVote = new ValidatedMethod({
       let users = voteTally[0].highestVotes.map((vote) => {
         return vote.user;
       });
+//      let ret = {
+//        users
+//      }
       if (users.length === 1) {
         Groups.update({_id: group._id, 'members.id': users[0]}, {$inc: {'members.$.points': group.victoryPointBank}, $set: {victoryPointBank: 1}});
       } else {
@@ -249,6 +251,7 @@ export const closeVote = new ValidatedMethod({
     if (swb) {
       addRefreshVotes({group});
       newHistory.winningBeer = voteTally[0];
+      newHistory.awardedPoints = group.victoryPointBank;
       newHistory.winningUser = addVictoryPoints({group, voteTally});
     }
 

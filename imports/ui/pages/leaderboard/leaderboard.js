@@ -52,7 +52,7 @@ Template.leaderboard.onCreated(() => {
             Object.keys(stats).forEach((user) => {
               let lastScore = stats[user].points[stats[user].points.length-1];
               if (user === history.user) {
-                stats[user].points.push(lastScore+1);
+                stats[user].points.push(lastScore+awardedPoints);
               } else {
                 stats[user].points.push(lastScore);
               }
