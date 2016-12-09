@@ -42,5 +42,11 @@ Template.layout.helpers({
 	},
 	redirectToLogin() {
 		FlowRouter.go('/login');
+	},
+	isOwner(groupId) {
+		return Roles.userIsInRole(Meteor.user(), ['owner'], groupId);
+	},
+	group(groupId) {
+		return Groups.findOne(groupId)
 	}
 });

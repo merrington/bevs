@@ -10,7 +10,7 @@ import './votingModal/votingModal.js';
 
 Template.voting.onRendered(() => {
 	let instance = Template.instance();
-	let oldHistoryLength = Groups.findOne().history.length;
+	  let oldHistoryLength = Groups.findOne().history && Groups.findOne().history.length;
 	instance.autorun(() => {
 		Groups.find({_id: instance.data.group._id}).observeChanges({
 			changed(id, fields) {
@@ -18,12 +18,12 @@ Template.voting.onRendered(() => {
 					//get the last item in the history and show the history panel for it
 					let result = fields.history[fields.history.length-1];
 					Blaze.renderWithData(Template.historyDetails, {history: result}, $('#resultDiv')[0]);
-					$('#resultDiv').addClass('animated tada')
+					  $('#resultDiv').addClass('animated bounceInUp');
 					oldHistoryLength = fields.history.length;
 				}
 			}
 		});
-	})
+	});
 });
 
 Template.voting.events({

@@ -1,12 +1,18 @@
 <template name="userCollection">
-	<ul class="collection with-header">
-		<li class="collection-header"><h6>{{header}}</h6></li>
-		{{#each users}}
-		<li class="collection-item avatar">
-			<img src="{{image}}" alt="" class="circle">
-			<span class="title">{{name}}</span>
-			{{#if showPoints}}<div class="chip">{{points}}</div>{{/if}}
-		</li>
+	<ul class="list-group">
+		{{#each user in users}}
+		<li class="list-group-item">
+        <div class="media" >
+            <div class="media-left" >
+                <img class="media-object img-circle" src="{{user.profile.image}}" width="64" height="64" >
+            </div>
+            <div class="media-body" >
+                <h4 class="media-heading" >
+                    {{user.profile.name}}
+                </h4>
+            </div>
+        </div>
+    </li>
 		{{/each}}
 	</ul>
 </template>

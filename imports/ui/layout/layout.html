@@ -33,6 +33,12 @@
 											<p class="text-danger" style="display:inline;"><i class="fa fa-minus-square"></i> {{negativeVotes}}</p>
 										</li>
 										<li role="separator" class="divider"></li>
+										{{#if isOwner groupId}}
+										<li>
+											<a data-toggle="modal" data-target="#groupSettingsModal"><i class="fa fa-cogs"> Settings</i></a>
+										</li>
+										<li role="separator" class="divider"></li>
+										{{/if}}
 									{{/if}}
 									<li> {{> loginMenu}} </li>
 								</ul>
@@ -45,7 +51,10 @@
 		</div><!-- /.container-fluid -->
 	</nav>
 
-	<div class="container">
+  {{#if inGroup}}
+  {{> groupSettings group=(group groupId)}}
+  {{/if}}
+  <div class="container">
 		{{#if authInProcess}}
 			Logging in...
 		{{else}}

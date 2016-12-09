@@ -1,3 +1,12 @@
 <template name="membersSettings">
-	{{> userCollection}}
+    <div class="form-group" >
+        <label for="addUser" >Add User</label>
+        <div class="input-group" >
+            <input type="text"  class="form-control" id="addUser" />
+            <span class="input-group-btn" >
+                <button class="btn btn-default" type="button" id="addUserBtn" >Add</button>
+            </span>
+        </div>
+    </div>
+	{{> userCollection users=users}}
 </template>

@@ -44,6 +44,26 @@ export const updateGroupSettings = new ValidatedMethod({
   }
 });
 
+export const addUser = new ValidatedMethod({
+    name: 'group.addUser',
+    validate: null,
+    run({username, groupId}) {
+        if (Meteor.isServer) {
+            let group = Groups.findOne({_id: groupId});
+            let user = Meteor.users.findOne({'services.google.email': username});
+            let newMember = {
+                id: user._id,
+                points: 0,
+                positiveVotes: group.points.starterPositiveVotes,
+                negativeVotes: group.points.starterNegativeVotes
+            };
+            Groups.update({_id: groupId}, {$addToSet: {members: newMember}}, (err, res) => {
+                Roles.addUsersToRoles(user._id, 'user', groupId);
+            });
+        }
+    }
+});
+
 export const startVote = new ValidatedMethod({
   name: 'groups.startVote',
   validate: null,
@@ -119,7 +139,7 @@ export const castVote = new ValidatedMethod({
         beer: beerId,
         user: self.userId,
         positiveVotes: vote.positiveVotes[beerId]
-      }
+      };
     });
     let nv = Object.keys(vote.negativeVotes).map((beerId) => {
       nvc += vote.negativeVotes[beerId];
@@ -127,7 +147,7 @@ export const castVote = new ValidatedMethod({
         beer: beerId,
         user: self.userId,
         negativeVotes: vote.negativeVotes[beerId]
-      }
+      };
     });
     let av = pv.concat(nv);
 
@@ -156,12 +176,15 @@ export const closeVote = new ValidatedMethod({
           positiveVotes: 0,
           negativeVotes: 0,
           total: 0,
-          highestVotes: []
-        }
+            highestVotes: [],
+            allVotes: []
+        };
       });
 
       //iterate over every vote cast
       votes.forEach((vote) => {
+          //add to the allVotes
+          voteTally[vote.beer].allVotes.push(vote);
         //add either the number of positive votes for the beer, or 0 if there were no positive votes to the overall voteTally object, do the same for negative
         voteTally[vote.beer].positiveVotes += (vote.positiveVotes || 0);
         voteTally[vote.beer].negativeVotes += (vote.negativeVotes || 0);
@@ -222,9 +245,6 @@ export const closeVote = new ValidatedMethod({
       let users = voteTally[0].highestVotes.map((vote) => {
         return vote.user;
       });
-//      let ret = {
-//        users
-//      }
       if (users.length === 1) {
         Groups.update({_id: group._id, 'members.id': users[0]}, {$inc: {'members.$.points': group.victoryPointBank}, $set: {victoryPointBank: 1}});
       } else {
@@ -247,7 +267,10 @@ export const closeVote = new ValidatedMethod({
       votes: voteTally
     };
     //check if there's a single winning beer
-    let swb = voteTally[0].total !== voteTally[1].total;
+      let swb = true;
+      if (voteTally.length > 1) {
+          swb = voteTally[0].total !== voteTally[1].total;
+      }
     if (swb) {
       addRefreshVotes({group});
       newHistory.winningBeer = voteTally[0];
