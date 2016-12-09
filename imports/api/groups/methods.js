@@ -14,7 +14,9 @@ export const newGroup = new ValidatedMethod({
         if (error) {
           throw "Error creating";
         } else {
-          Roles.addUsersToRoles(this.userId, ['owner'], id);
+            let user = Meteor.users.findOne({_id: this.userId});
+            addUser.call({username: user.services.google.email, groupId: id});
+            Roles.addUsersToRoles(this.userId, ['owner'], id);
         }
       });
       return groupId;
@@ -53,10 +55,12 @@ export const addUser = new ValidatedMethod({
             let user = Meteor.users.findOne({'services.google.email': username});
             let newMember = {
                 id: user._id,
-                points: 0,
-                positiveVotes: group.points.starterPositiveVotes,
-                negativeVotes: group.points.starterNegativeVotes
+                points: 0
             };
+            if (group.points) {
+                newMember.positiveVotes = group.points.starterPositiveVotes;
+                newMember.negativeVotes = group.points.starterNegativeVotes;
+            }
             Groups.update({_id: groupId}, {$addToSet: {members: newMember}}, (err, res) => {
                 Roles.addUsersToRoles(user._id, 'user', groupId);
             });

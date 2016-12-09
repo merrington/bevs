@@ -16,7 +16,7 @@ Template.newGroup.events({
         //$('#newGroupErrorMessage').removeClass('hidden');
       } else {
         FlowRouter.go('/groups/:id', {id: id});
-        //TODO: hide the modal
+          $('#newGroupModal').modal('hide');
       }
     });
   }

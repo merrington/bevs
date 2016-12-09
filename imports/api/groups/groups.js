@@ -3,12 +3,9 @@ import { Mongo } from 'meteor/mongo';
 class GroupsCollection extends Mongo.Collection {
 	insert({name, ownerId}, callback) {
 		group = {
-			name: name,
-			members: [{
-				'id': ownerId,
-				'points': 0,
-				'votes': 0,
-			}]
+			  name: name,
+        beers: [],
+        members: []
 		};
 
 		return super.insert(group, callback);
