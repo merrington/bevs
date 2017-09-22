@@ -9,6 +9,7 @@
     "bcrypt": "^1.0.3",
     "bulma": "^0.5.3",
     "font-awesome": "^4.7.0",
+    "lodash": "^4.17.4",
     "meteor-node-stubs": "~0.2.4",
     "popper.js": "^1.12.5",
     "prop-types": "^15.5.10",
@@ -16,6 +17,7 @@
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.2.2",
+    "react-select": "^1.0.0-rc.10",
     "slugify": "^1.2.1",
     "styled-components": "^2.1.2"
   },

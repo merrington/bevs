@@ -1,11 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
+import { Route } from 'react-router-dom';
 import LoginBtn from './login-btn/LoginBtn.jsx';
+import SeasonMenu from './season-menu/SeasonMenu';
 
-class Header extends Component {
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.logoutHandler = this.logoutHandler.bind(this);
+  }
+
   logoutHandler() {
     Meteor.logout();
+    this.props.history.push('/');
   }
 
   render() {
@@ -24,6 +32,7 @@ class Header extends Component {
         </button>
 
         <div className="navbar-menu" id="navbarToggle">
+          <Route path={'/:slug'} component={SeasonMenu} />
           <div className="navbar-end">
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link">
@@ -42,9 +51,8 @@ class Header extends Component {
   }
 }
 
-export default createContainer(
-  () => ({
+export default (HeaderContainer = withTracker(() => {
+  return {
     currentUser: Meteor.user()
-  }),
-  Header
-);
+  };
+})(Header));

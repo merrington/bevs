@@ -57,7 +57,7 @@ class SeasonList extends React.Component {
   render() {
     return (
       <div className="container">
-        <h3 className="subtitle is-4">Active Seasons</h3>
+        <h3 className="title">Active Seasons</h3>
         <div className="columns is-mobile is-multiline">
           {this.props.seasonsReady ? (
             this.renderSeasons(
@@ -94,7 +94,7 @@ class SeasonList extends React.Component {
           </div>
         </div>
 
-        <h3 className="subtitle is-4">Past Seasons</h3>
+        <h3 className="title">Past Seasons</h3>
         <div className="columns is-mobile is-multiline">
           {this.renderSeasons(season => season.status === 'finished')}
         </div>
