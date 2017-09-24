@@ -18,7 +18,10 @@ class Header extends React.Component {
 
   render() {
     return (
-      <nav className="navbar navbar-expand-lg is-dark">
+      <nav
+        className="navbar navbar-expand-lg is-dark"
+        style={{ marginBottom: 15 }}
+      >
         <div className="navbar-brand">
           <Link to="/" className="navbar-item is-size-5">
             <i className="fa fa-beer fa-lg" /> &nbsp; BEVS 3.0

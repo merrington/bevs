@@ -49,3 +49,49 @@ export const newSeason = new ValidatedMethod({
     return slug;
   }
 });
+
+export const addBeer = new ValidatedMethod({
+  name: 'season.addBeer',
+  validate({ beer, slug }) {
+    const userIsAdmin = Roles.userIsInRole(this.userId, 'owner', slug);
+    if (!userIsAdmin) {
+      throw new Meteor.Error('not-owner', 'Not an owner');
+    }
+
+    if (!beer) {
+      throw new ValidationError({
+        name: 'bad-beer',
+        type: 'Invalid beer'
+      });
+    }
+  },
+  run({ beer, slug }) {
+    return Seasons.update({ slug }, { $addToSet: { beers: beer } });
+  }
+});
+
+export const deleteBeer = new ValidatedMethod({
+  name: 'season.deleteBeer',
+  validate({ slug }) {
+    const userIsAdmin = Roles.userIsInRole(this.userId, 'owner', slug);
+    if (!userIsAdmin) {
+      throw new Meteor.Error('not-owner', 'Not an owner');
+    }
+  },
+  run({ beer, slug }) {
+    return Seasons.update({ slug }, { $pull: { beers: beer } });
+  }
+});
+
+export const updateSetting = new ValidatedMethod({
+  name: 'season.updateSetting',
+  validate({ name, value, slug }) {
+    const userIsAdmin = Roles.userIsInRole(this.userId, 'owner', slug);
+    if (!userIsAdmin) {
+      throw new Meteor.Error('not-owner', 'Not an owner');
+    }
+  },
+  run({ name, value, slug }) {
+    return Seasons.update({ slug }, { $set: { [`settings.${name}`]: value } });
+  }
+});

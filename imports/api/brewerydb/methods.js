@@ -25,7 +25,11 @@ export const searchBeer = new ValidatedMethod({
           return searchResults.data.data.map(beer => ({
             value: beer.id,
             label: beer.name,
-            labels: beer.labels || {}
+            beer: {
+              id: beer.id,
+              name: beer.name,
+              labels: beer.labels || {}
+            }
           }));
         }
       }
