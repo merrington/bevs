@@ -14,6 +14,7 @@ export default class NewSeasonModal extends React.Component {
     this.state = {
       creating: false
     };
+    console.log(this.props);
 
     this.handleChange = this.handleChange.bind(this);
     this.handleCreate = this.handleCreate.bind(this);
@@ -42,9 +43,7 @@ export default class NewSeasonModal extends React.Component {
             creating: false
           });
         } else {
-          this.setState({
-            newSeasonSlug: res
-          });
+          this.props.history.push(`/season/${res}`);
         }
       }
     );
@@ -103,13 +102,6 @@ export default class NewSeasonModal extends React.Component {
             Create
           </a>
         </CardModalFooter>
-        {this.state.newSeasonSlug ? (
-          <Router>
-            <Redirect to={`/${this.state.newSeasonSlug}`} />
-          </Router>
-        ) : (
-          ''
-        )}
       </CardModalContainer>
     );
   }

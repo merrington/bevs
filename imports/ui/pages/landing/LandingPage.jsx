@@ -1,6 +1,8 @@
-import { Meteor } from "meteor/meteor";
-import React from "react";
-import styled from "styled-components";
+import { Meteor } from 'meteor/meteor';
+import { Switch, Route, Link } from 'react-router-dom';
+import React from 'react';
+import styled from 'styled-components';
+import SignInAndRegister from '/imports/ui/components/signInAndRegister/SignInAndRegister';
 
 const Background = styled.div`
   height: 100%;
@@ -12,7 +14,7 @@ const Background = styled.div`
   opacity: 0.5;
 `;
 
-const fonts = { fontFamily: "Bebas, sans-serif" };
+const fonts = { fontFamily: 'Bebas, sans-serif' };
 
 const GoogleSignInBtn = styled.button`
   border: 0;
@@ -29,21 +31,20 @@ const GoogleSignInBtn = styled.button`
   }
 `;
 
+const PasswordSignInBtn = styled(Link)`
+  border: 0;
+  padding: 0;
+  height: 46px;
+  width: 191px;
+`;
+
 export default function LandingPage() {
   const onGoogleLoginClick = () => {
     Meteor.loginWithGoogle();
   };
 
   function Greeting() {
-    if (Meteor.loggingIn()) {
-      return <div>Loading...</div>;
-    }
-    return <GoogleSignInBtn onClick={onGoogleLoginClick} />;
-  }
-
-  return (
-    <div>
-      <Background />
+    return (
       <section className="hero is-medium">
         <div className="hero-body">
           <div className="container">
@@ -57,12 +58,42 @@ export default function LandingPage() {
                 </h2>
               </div>
               <div className="column">
-                <Greeting />
+                <div className="box has-text-centered">
+                  <GoogleSignInBtn onClick={onGoogleLoginClick} />
+                  <PasswordSignInBtn to="/signin" className="button is-primary">
+                    Sign In with password
+                  </PasswordSignInBtn>
+                  <br />
+                  <Link to="/register" className="is-size-7">
+                    Register with password
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+    );
+  }
+
+  return (
+    <div>
+      <Background />
+      {Meteor.loggingIn() ? (
+        <div>Loading...</div>
+      ) : (
+        <Switch>
+          <Route
+            path="/register"
+            render={props => <SignInAndRegister register={true} />}
+          />
+          <Route
+            path="/signin"
+            render={props => <SignInAndRegister register={false} />}
+          />
+          <Route path="/" component={Greeting} />
+        </Switch>
+      )}
     </div>
   );
 }

@@ -45,7 +45,7 @@ class SeasonList extends React.Component {
           </header>
           <div className="card-content">Position: Leader:</div>
           <footer className="card-footer">
-            <Link to={`/${season.slug}`} className="card-footer-item">
+            <Link to={`/season/${season.slug}`} className="card-footer-item">
               Go to season
             </Link>
           </footer>
@@ -84,7 +84,10 @@ class SeasonList extends React.Component {
                     <span>New Season</span>
                   </a>
                   {this.state.showNewSeasonModal ? (
-                    <NewSeasonModal closeModal={this.closeModal} />
+                    <NewSeasonModal
+                      closeModal={this.closeModal}
+                      history={this.props.history}
+                    />
                   ) : (
                     ''
                   )}

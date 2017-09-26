@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
-import { Route } from 'react-router-dom';
-import LoginBtn from './login-btn/LoginBtn.jsx';
+import { Switch, Route } from 'react-router-dom';
 import SeasonMenu from './season-menu/SeasonMenu';
 
 class Header extends React.Component {
@@ -35,7 +34,7 @@ class Header extends React.Component {
         </button>
 
         <div className="navbar-menu" id="navbarToggle">
-          <Route path={'/:slug'} component={SeasonMenu} />
+          <Route path={'/season/:slug'} component={SeasonMenu} />
           <div className="navbar-end">
             <div className="navbar-item has-dropdown is-hoverable">
               <a className="navbar-link">

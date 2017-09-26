@@ -6,7 +6,7 @@ import slugify from 'slugify';
 
 export const newSeason = new ValidatedMethod({
   name: 'seson.new',
-  validate: ({ name }) => {
+  validate({ name }) {
     if (typeof name !== 'string') {
       throw new ValidationError([
         {
@@ -40,8 +40,11 @@ export const newSeason = new ValidatedMethod({
     const seasonId = Seasons.insert({
       name,
       slug,
-      owner: this.userId,
-      members: [this.userId]
+      players: [
+        {
+          user: this.userId
+        }
+      ]
     });
 
     Roles.addUsersToRoles(this.userId, ['owner', 'player'], slug);
@@ -93,5 +96,23 @@ export const updateSetting = new ValidatedMethod({
   },
   run({ name, value, slug }) {
     return Seasons.update({ slug }, { $set: { [`settings.${name}`]: value } });
+  }
+});
+
+export const addUser = new ValidatedMethod({
+  name: 'season.addUSer',
+  validate: null,
+  run({ slug }) {
+    Roles.addUsersToRoles(this.userId, 'player', slug);
+    Seasons.update(
+      { slug },
+      {
+        $push: {
+          players: {
+            user: this.userId
+          }
+        }
+      }
+    );
   }
 });

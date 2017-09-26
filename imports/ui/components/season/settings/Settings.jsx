@@ -9,28 +9,46 @@ import {
 } from '/imports/api/seasons/methods';
 import { Seasons } from '/imports/api/seasons/Seasons';
 import { withTracker } from 'meteor/react-meteor-data';
+import { sendInvite } from '/imports/api/invites/methods';
+import UserMedia from '../../userMedia/UserMedia';
 import Portal from 'react-portal';
 
 class Settings extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      showInvite: false
+    };
+
     this.addBeer = this.addBeer.bind(this);
     this.onSettingChange = this.onSettingChange.bind(this);
     this.closeSavedPortal = this.closeSavedPortal.bind(this);
+    this.closeErrorPortal = this.closeErrorPortal.bind(this);
+    this.toggleShowInvite = this.toggleShowInvite.bind(this);
+    this.updateInviteEmail = this.updateInviteEmail.bind(this);
+    this.sendInvite = this.sendInvite.bind(this);
   }
 
   addBeer(beer) {
     if (beer && beer.beer) {
+      console.log('here');
       addBeerMethod.call(
         {
           beer: beer.beer,
           slug: this.props.match.params.slug
         },
         (err, res) => {
-          if (!err) {
+          if (err) {
+            console.error(err);
+            this.setState({
+              errorMessage: err
+            });
+            this.refs.errorPortal.openPortal();
+            setTimeout(this.closeErrorPortal, 5000);
+          } else {
             this.refs.savedPortal.openPortal();
-            setTimeout(this.closeSavedPortal, 1000);
+            setTimeout(this.closeSavedPortal, 2000);
           }
         }
       );
@@ -78,6 +96,33 @@ class Settings extends React.Component {
     }
   }
 
+  closeErrorPortal() {
+    if (this.refs.errorPortal) {
+      this.refs.errorPortal.closePortal();
+    }
+  }
+
+  toggleShowInvite() {
+    this.setState({
+      showInvite: !this.state.showInvite
+    });
+  }
+
+  updateInviteEmail(event) {
+    this.setState({
+      inviteEmail: event.target.value
+    });
+  }
+
+  sendInvite() {
+    const email = this.state.inviteEmail;
+    sendInvite.call({
+      seasonName: this.props.season.name,
+      slug: this.props.match.params.slug,
+      email
+    });
+  }
+
   render() {
     if (!this.props.seasonReady) {
       return <div>Loading</div>;
@@ -92,10 +137,14 @@ class Settings extends React.Component {
               <div className="columns">
                 <div className="column">
                   <BeerSearch onChange={this.addBeer} />
-                  <BeerList
-                    beers={this.props.season.beers}
-                    right={this.deleteBeer()}
-                  />
+                  {this.props.season.beers ? (
+                    <BeerList
+                      beers={this.props.season.beers}
+                      right={this.deleteBeer()}
+                    />
+                  ) : (
+                    ''
+                  )}
                 </div>
               </div>
             </div>
@@ -103,7 +152,70 @@ class Settings extends React.Component {
 
           <div className="column">
             <div className="box">
-              <p className="title">Users</p>
+              <p className="title">Players</p>
+              <div className="columns">
+                <div className="column">
+                  {this.props.users ? (
+                    <div className="box">
+                      {this.props.users.map(user => (
+                        <UserMedia user={user} key={user._id} />
+                      ))}
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  <div
+                    className={
+                      this.state.showInvite ? 'dropdown is-active' : 'dropdown'
+                    }
+                  >
+                    <div className="dropdown-trigger">
+                      <button
+                        className="button is-primary"
+                        onClick={this.toggleShowInvite}
+                      >
+                        <span className="icon">
+                          <i className="fa fa-plus" />
+                        </span>
+                        <span>Invite player</span>
+                      </button>
+                    </div>
+                    <div
+                      className="dropdown-menu"
+                      id="dropdown-menu"
+                      role="menu"
+                    >
+                      <div className="dropdown-content">
+                        <div className="dropdown-item">
+                          <div className="field">
+                            <p className="control has-icons-left">
+                              <input
+                                className="input"
+                                type="email"
+                                placeholder="Email"
+                                onChange={this.updateInviteEmail}
+                              />
+                              <span className="icon is-small is-left">
+                                <i className="fa fa-envelope" />
+                              </span>
+                            </p>
+                          </div>
+                          <div className="field">
+                            <p className="control">
+                              <button
+                                className="button is-success"
+                                onClick={this.sendInvite}
+                              >
+                                Send Invite
+                              </button>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -227,7 +339,7 @@ class Settings extends React.Component {
                     type="number"
                     min="1"
                     name="pointsToVictory"
-                    value={this.props.season.settings.pointsToVictory}
+                    value={get(this.props.season.settings, 'pointsToVictory')}
                     onChange={this.onSettingChange}
                   />
                 </div>
@@ -245,21 +357,33 @@ class Settings extends React.Component {
             Saved!
           </div>
         </Portal>
+
+        <Portal ref="errorPortal">
+          <div
+            className="notification is-danger"
+            style={{ right: 50, top: 50, position: 'absolute' }}
+          >
+            <button className="delete" onClick={this.closeSavedPortal} />
+            {this.state.errorMessage}
+          </div>
+        </Portal>
       </div>
     );
   }
 }
 
 export default withTracker(props => {
-  const seasonSubHandle = Meteor.subscribe(
-    'season.slug',
-    props.match.params.slug
-  );
+  const slug = props.match.params.slug;
+
+  const seasonSubHandle = Meteor.subscribe('season.slug', slug);
+  Meteor.subscribe('users.season', slug);
+  const users = Roles.getUsersInRole(['owner', 'player'], slug).fetch();
 
   return {
     seasonReady: seasonSubHandle.ready(),
     season:
       seasonSubHandle.ready() &&
-      Seasons.findOne({ slug: props.match.params.slug })
+      Seasons.findOne({ slug: props.match.params.slug }),
+    users
   };
 })(Settings);

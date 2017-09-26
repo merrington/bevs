@@ -10,10 +10,15 @@ import 'font-awesome/css/font-awesome.css';
 
 class App extends Component {
   render() {
-    if (Meteor.user()) {
-      return <Dashboard />;
-    }
-    return <LandingPage />;
+    return (
+      <Router>
+        {Meteor.user() ? (
+          <Route component={Dashboard} />
+        ) : (
+          <Route component={LandingPage} />
+        )}
+      </Router>
+    );
   }
 }
 

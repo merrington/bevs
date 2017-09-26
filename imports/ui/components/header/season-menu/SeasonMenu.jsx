@@ -14,7 +14,7 @@ export default class SeasonMenu extends React.Component {
     return (
       <div className="navbar-start">
         <NavLink
-          to={`/${this.state.seasonSlug}`}
+          to={`/season/${this.state.seasonSlug}`}
           exact
           className="navbar-item"
           activeClassName="is-active"
@@ -22,21 +22,21 @@ export default class SeasonMenu extends React.Component {
           Standings
         </NavLink>
         <NavLink
-          to={`/${this.state.seasonSlug}/voting`}
+          to={`/season/${this.state.seasonSlug}/voting`}
           className="navbar-item"
           activeClassName="is-active"
         >
           Voting
         </NavLink>
         <NavLink
-          to={`/${this.state.seasonSlug}/history`}
+          to={`/season/${this.state.seasonSlug}/history`}
           className="navbar-item"
           activeClassName="is-active"
         >
           History
         </NavLink>
         <NavLink
-          to={`/${this.state.seasonSlug}/settings`}
+          to={`/season/${this.state.seasonSlug}/settings`}
           className="navbar-item"
           activeClassName="is-active"
         >
