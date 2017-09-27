@@ -8,3 +8,5 @@ import '../../api/invites/server/publications';
 import '../../api/brewerydb/methods';
 
 import '../../api/users/server/publications';
+
+import '../../api/voting/methods';

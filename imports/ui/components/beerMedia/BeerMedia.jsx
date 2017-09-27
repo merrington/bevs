@@ -15,7 +15,9 @@ export default function BeerMedia(props) {
           <img src={imgsrc} />
         </p>
       </figure>
-      <div className="media-content">{beer.name}</div>
+      <div className="media-content">
+        <p className="subtitle is-4">{beer.name}</p>
+      </div>
       {props.right ? (
         <div className="media-right">{props.right(beer)}</div>
       ) : (

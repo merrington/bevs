@@ -29,3 +29,9 @@ export const closeVoting = new ValidatedMethod({
     Seasons.update({ slug }, { $set: { 'voting.open': false } });
   }
 });
+
+export const castVote = new ValidatedMethod({
+  name: 'voting.cast',
+  validate({ vote, slug }) {},
+  run({ vote, slug }) {}
+});

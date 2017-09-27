@@ -77,7 +77,7 @@ export default withTracker(props => {
   const tokenSub = Meteor.subscribe('invites.token', token);
   const invite = Invites.findOne({ token });
   const slug = invite ? invite.slug : undefined;
-  const seasonSubHandle = Meteor.subscribe('season.slug', slug);
+  const seasonSubHandle = Meteor.subscribe('seasons.slug', slug);
 
   return {
     ready: tokenSub.ready() && seasonSubHandle.ready(),

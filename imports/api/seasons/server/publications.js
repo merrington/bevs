@@ -7,6 +7,6 @@ Meteor.publish('seasons.user', function userSeasons() {
   return Seasons.find({ slug: { $in: slugs } });
 });
 
-Meteor.publish('season.slug', function slugSeason(slug) {
+Meteor.publish('seasons.slug', function slugSeason(slug) {
   return Seasons.find({ slug });
 });

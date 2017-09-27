@@ -375,7 +375,7 @@ class Settings extends React.Component {
 export default withTracker(props => {
   const slug = props.match.params.slug;
 
-  const seasonSubHandle = Meteor.subscribe('season.slug', slug);
+  const seasonSubHandle = Meteor.subscribe('seasons.slug', slug);
   Meteor.subscribe('users.season', slug);
   const users = Roles.getUsersInRole(['owner', 'player'], slug).fetch();
 

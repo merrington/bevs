@@ -19,28 +19,40 @@ export default class SeasonMenu extends React.Component {
           className="navbar-item"
           activeClassName="is-active"
         >
-          Standings
+          <span className="icon">
+            <i className="fa fa-list-ol" />
+          </span>
+          <span>Standings</span>
         </NavLink>
         <NavLink
           to={`/season/${this.state.seasonSlug}/voting`}
           className="navbar-item"
           activeClassName="is-active"
         >
-          Voting
+          <span className="icon">
+            <i className="fa fa-check-square-o" />
+          </span>
+          <span>Voting</span>
         </NavLink>
         <NavLink
           to={`/season/${this.state.seasonSlug}/history`}
           className="navbar-item"
           activeClassName="is-active"
         >
-          History
+          <span className="icon">
+            <i className="fa fa-book" />
+          </span>
+          <span>History</span>
         </NavLink>
         <NavLink
           to={`/season/${this.state.seasonSlug}/settings`}
           className="navbar-item"
           activeClassName="is-active"
         >
-          Settings
+          <span className="icon">
+            <i className="fa fa-cogs" />
+          </span>
+          <span>Settings</span>
         </NavLink>
       </div>
     );
