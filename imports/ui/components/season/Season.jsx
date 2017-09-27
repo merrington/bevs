@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { Roles } from 'meteor/alanning:roles';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Seasons } from '/imports/api/seasons/Seasons';
+import get from 'lodash/get';
 import Standings from './standings/Standings';
 import Settings from './settings/Settings';
 import Voting from '../../pages/dashboard/Voting';
@@ -13,11 +13,10 @@ class Season extends React.Component {
   }
 
   render() {
-    if (!this.props.userIsInSeason) {
-      return <Redirect to="/" />;
-    }
-    if (!this.props.seasonReady) {
+    if (!this.props.userReady) {
       return 'Loading...';
+    } else if (!this.props.userIsInSeason) {
+      return <Redirect to="/" />;
     }
     return (
       <Switch>
@@ -33,20 +32,19 @@ class Season extends React.Component {
 }
 
 export default withTracker(props => {
-  let userIsInSeason = true;
-  if (Meteor.user() && Roles.subscription.ready()) {
-    userIsInSeason = Roles.userIsInRole(
-      Meteor.userId(),
-      ['owner', 'player'],
-      props.match.params.slug
-    );
-  }
+  const userSubHandle = Meteor.subscribe('userData');
+  const userReady = userSubHandle.ready();
 
   const slug = props.match.params.slug;
+
+  const userIsInSeason = get(Meteor.user(), 'seasons', []).find(
+    season => season.slug === slug
+  );
 
   const seasonSubHandle = Meteor.subscribe('seasons.slug', slug);
 
   return {
+    userReady,
     userIsInSeason,
     seasonReady: seasonSubHandle.ready(),
     season: Seasons.findOne({ slug })

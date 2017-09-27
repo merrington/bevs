@@ -1,6 +1,5 @@
 import { Seasons } from '../seasons/Seasons';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { Roles } from 'meteor/alanning:roles';
 import get from 'lodash/get';
 
 export const openVoting = new ValidatedMethod({
@@ -32,6 +31,68 @@ export const closeVoting = new ValidatedMethod({
 
 export const castVote = new ValidatedMethod({
   name: 'voting.cast',
-  validate({ vote, slug }) {},
-  run({ vote, slug }) {}
+  validate({ votes, slug }) {
+    const user = Meteor.users.findOne(this.userId);
+    const userSeason = get(user, 'seasons', []).find(
+      season => season.slug === slug
+    );
+
+    const userVotes = userSeason.votes;
+    const votesCast = votes.reduce((acc, vote) => {
+      return {
+        positive: acc.positive + vote.positive,
+        negative: acc.negative + vote.negative
+      };
+    });
+
+    if (
+      votesCast.positive > userVotes.positive ||
+      votesCast.negative > userVotes.negative
+    ) {
+      throw new Meteor.Error(
+        'not-enough-votes',
+        'Tried to cast more votes then available'
+      );
+    }
+
+    //user hasn't voted previously
+    if (userSeason.voted) {
+      throw new Meteor.Error('already-voted', 'Already cast a vote');
+    }
+  },
+  run({ votes, slug, comment }) {
+    // Remove the votes cast from the user
+    const userVotes = Meteor.users
+      .findOne(this.userId)
+      .seasons.find(season => season.slug === slug).votes;
+
+    votes.forEach(vote => {
+      userVotes.positive -= vote.positive;
+      userVotes.negative -= vote.negative;
+    });
+
+    Meteor.users.update(
+      { _id: this.userId, 'seasons.slug': slug },
+      {
+        $set: { 'seasons.$.votes': userVotes, 'seasons.$.voted': true }
+      }
+    );
+
+    //add the votes to the history of voting
+    Seasons.update(
+      { slug },
+      {
+        $addToSet: {
+          'voting.votes': {
+            user: this.userId,
+            votes,
+            comment
+          }
+        },
+        $inc: {
+          'voting.voted.count': 1
+        }
+      }
+    );
+  }
 });

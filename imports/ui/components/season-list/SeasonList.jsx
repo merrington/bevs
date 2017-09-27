@@ -2,8 +2,8 @@ import React from 'react';
 import NewSeasonModal from './NewSeasonModal';
 import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
-import { Roles } from 'meteor/alanning:roles';
 import { Seasons } from '/imports/api/seasons/Seasons';
+import get from 'lodash/get';
 
 class SeasonList extends React.Component {
   constructor(props) {
@@ -107,9 +107,10 @@ class SeasonList extends React.Component {
 }
 
 export default (SeasonListContainer = withTracker(() => {
+  Meteor.subscribe('userData');
   const seasonsHandle = Meteor.subscribe('seasons.user');
   const seasonsReady = seasonsHandle.ready();
-  const slugs = Roles.getGroupsForUser(Meteor.userId());
+  const slugs = get(Meteor.user(), 'seasons', []).map(season => season.slug);
   const seasons = Seasons.find({ slug: { $in: slugs } }).fetch();
 
   return {

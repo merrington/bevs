@@ -21,7 +21,6 @@ Meteor.users.deny({
 
 //Setup fields on creating new user
 Accounts.onCreateUser((options, user) => {
-  console.log(options, user);
   const customizedUser = user;
 
   if (options.profile) {

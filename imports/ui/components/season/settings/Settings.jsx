@@ -5,7 +5,8 @@ import get from 'lodash/get';
 import {
   addBeer as addBeerMethod,
   deleteBeer as deleteBeerMethod,
-  updateSetting
+  updateSetting,
+  startSeason
 } from '/imports/api/seasons/methods';
 import { Seasons } from '/imports/api/seasons/Seasons';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -28,25 +29,18 @@ class Settings extends React.Component {
     this.toggleShowInvite = this.toggleShowInvite.bind(this);
     this.updateInviteEmail = this.updateInviteEmail.bind(this);
     this.sendInvite = this.sendInvite.bind(this);
+    this.startSeason = this.startSeason.bind(this);
   }
 
   addBeer(beer) {
     if (beer && beer.beer) {
-      console.log('here');
       addBeerMethod.call(
         {
           beer: beer.beer,
           slug: this.props.match.params.slug
         },
         (err, res) => {
-          if (err) {
-            console.error(err);
-            this.setState({
-              errorMessage: err
-            });
-            this.refs.errorPortal.openPortal();
-            setTimeout(this.closeErrorPortal, 5000);
-          } else {
+          if (!err) {
             this.refs.savedPortal.openPortal();
             setTimeout(this.closeSavedPortal, 2000);
           }
@@ -123,6 +117,10 @@ class Settings extends React.Component {
     });
   }
 
+  startSeason() {
+    startSeason.call({ slug: this.props.season.slug });
+  }
+
   render() {
     if (!this.props.seasonReady) {
       return <div>Loading</div>;
@@ -130,6 +128,13 @@ class Settings extends React.Component {
 
     return (
       <div className="container">
+        {this.props.season.started ? (
+          <div className="notification is-info">
+            The season has started! Changes to the settings now will not persist
+          </div>
+        ) : (
+          ''
+        )}
         <div className="columns">
           <div className="column">
             <div className="box">
@@ -219,7 +224,6 @@ class Settings extends React.Component {
             </div>
           </div>
         </div>
-
         <div className="columns">
           <div className="column">
             <div className="box">
@@ -232,9 +236,9 @@ class Settings extends React.Component {
                     <div className="control">
                       <input
                         className="input"
-                        name="startingVote.positive"
                         type="number"
                         min="0"
+                        name="startingVote.positive"
                         value={get(
                           this.props.season.settings,
                           'startingVote.positive'
@@ -325,7 +329,6 @@ class Settings extends React.Component {
             </div>
           </div>
         </div>
-
         <div className="columns">
           <div className="column is-half">
             <div className="box">
@@ -347,7 +350,18 @@ class Settings extends React.Component {
             </div>
           </div>
         </div>
-
+        {this.props.season.started ? (
+          ''
+        ) : (
+          <div className="column has-text-centered">
+            <a
+              className="button is-success is-large is-fullwidth"
+              onClick={this.startSeason}
+            >
+              Start Season!
+            </a>
+          </div>
+        )}
         <Portal ref="savedPortal">
           <div
             className="notification is-primary"
@@ -357,7 +371,6 @@ class Settings extends React.Component {
             Saved!
           </div>
         </Portal>
-
         <Portal ref="errorPortal">
           <div
             className="notification is-danger"
@@ -377,7 +390,7 @@ export default withTracker(props => {
 
   const seasonSubHandle = Meteor.subscribe('seasons.slug', slug);
   Meteor.subscribe('users.season', slug);
-  const users = Roles.getUsersInRole(['owner', 'player'], slug).fetch();
+  const users = Meteor.users.find({ 'seasons.slug': slug }).fetch();
 
   return {
     seasonReady: seasonSubHandle.ready(),

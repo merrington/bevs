@@ -14,7 +14,6 @@ export default class NewSeasonModal extends React.Component {
     this.state = {
       creating: false
     };
-    console.log(this.props);
 
     this.handleChange = this.handleChange.bind(this);
     this.handleCreate = this.handleCreate.bind(this);

@@ -2,7 +2,7 @@ import { Email } from 'meteor/email';
 import { Random } from 'meteor/random';
 import { Invites } from './Invites';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { addUser } from '../seasons/methods';
+import { Seasons } from '/imports/api/seasons/Seasons';
 
 export const sendInvite = new ValidatedMethod({
   name: 'invites.send',
@@ -34,9 +34,21 @@ https://bevs.beer/invite/${token}`;
 
 export const acceptInvite = new ValidatedMethod({
   name: 'invites.accept',
-  validate: null,
+  validate({ slug, token }) {
+    const inviteExists = Invites.findOne({ slug, token });
+    if (!inviteExists) {
+      throw new Meteor.Error(
+        'invalid-invite',
+        "Invite for this season doesn't exist"
+      );
+    }
+  },
   run({ slug, token }) {
-    addUser.call({ slug });
+    Meteor.users.update(this.userId, {
+      $addToSet: {
+        seasons: { slug }
+      }
+    });
     Invites.remove({ token });
   }
 });

@@ -1,6 +1,17 @@
 import { Meteor } from 'meteor/meteor';
-import { Roles } from 'meteor/alanning:roles';
 
 Meteor.publish('users.season', slug => {
-  return Roles.getUsersInRole(['owner', 'player'], slug);
+  return Meteor.users.find({ 'seasons.slug': slug });
+});
+
+Meteor.publish('userData', function publishUserData() {
+  if (this.userId) {
+    return Meteor.users.find(this.userId, {
+      fields: {
+        seasons: 1
+      }
+    });
+  } else {
+    this.ready();
+  }
 });

@@ -46,7 +46,6 @@ export default class Register extends React.Component {
     } else {
       Meteor.loginWithPassword(username, password, err => {
         if (err) {
-          console.error(err);
           this.setState({ loading: false });
         }
       });

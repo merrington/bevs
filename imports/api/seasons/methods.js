@@ -1,8 +1,19 @@
 import { Seasons } from './Seasons';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { ValidationError } from 'meteor/mdg:validation-error';
-import { Roles } from 'meteor/alanning:roles';
+import get from 'lodash/get';
 import slugify from 'slugify';
+
+function isSeasonStarted(slug) {
+  return Seasons.findOne({ slug }).started;
+}
+
+function userIsAdmin(userId, slug) {
+  const user = Meteor.users.findOne(userId);
+  return get(user, 'seasons', []).find(
+    season => season.slug === slug && season.role === 'owner'
+  );
+}
 
 export const newSeason = new ValidatedMethod({
   name: 'seson.new',
@@ -37,17 +48,15 @@ export const newSeason = new ValidatedMethod({
   },
   run({ name }) {
     const slug = slugify(name);
-    const seasonId = Seasons.insert({
+    Seasons.insert({
       name,
-      slug,
-      players: [
-        {
-          user: this.userId
-        }
-      ]
+      slug
     });
-
-    Roles.addUsersToRoles(this.userId, ['owner', 'player'], slug);
+    Meteor.users.update(this.userId, {
+      $addToSet: {
+        seasons: { slug, role: 'owner' }
+      }
+    });
 
     return slug;
   }
@@ -56,8 +65,7 @@ export const newSeason = new ValidatedMethod({
 export const addBeer = new ValidatedMethod({
   name: 'season.addBeer',
   validate({ beer, slug }) {
-    const userIsAdmin = Roles.userIsInRole(this.userId, 'owner', slug);
-    if (!userIsAdmin) {
+    if (!userIsAdmin(this.userId, slug)) {
       throw new Meteor.Error('not-owner', 'Not an owner');
     }
 
@@ -66,6 +74,10 @@ export const addBeer = new ValidatedMethod({
         name: 'bad-beer',
         type: 'Invalid beer'
       });
+    }
+
+    if (isSeasonStarted(slug)) {
+      throw new Meteor.Error('season-started', 'Season already started');
     }
   },
   run({ beer, slug }) {
@@ -76,9 +88,12 @@ export const addBeer = new ValidatedMethod({
 export const deleteBeer = new ValidatedMethod({
   name: 'season.deleteBeer',
   validate({ slug }) {
-    const userIsAdmin = Roles.userIsInRole(this.userId, 'owner', slug);
-    if (!userIsAdmin) {
+    if (!userIsAdmin(this.userId, slug)) {
       throw new Meteor.Error('not-owner', 'Not an owner');
+    }
+
+    if (isSeasonStarted(slug)) {
+      throw new Meteor.Error('season-started', 'Season already started');
     }
   },
   run({ beer, slug }) {
@@ -89,9 +104,12 @@ export const deleteBeer = new ValidatedMethod({
 export const updateSetting = new ValidatedMethod({
   name: 'season.updateSetting',
   validate({ name, value, slug }) {
-    const userIsAdmin = Roles.userIsInRole(this.userId, 'owner', slug);
-    if (!userIsAdmin) {
+    if (!userIsAdmin(this.userId, slug)) {
       throw new Meteor.Error('not-owner', 'Not an owner');
+    }
+
+    if (isSeasonStarted(slug)) {
+      throw new Meteor.Error('season-started', 'Season already started');
     }
   },
   run({ name, value, slug }) {
@@ -99,20 +117,33 @@ export const updateSetting = new ValidatedMethod({
   }
 });
 
-export const addUser = new ValidatedMethod({
-  name: 'season.addUSer',
-  validate: null,
+export const startSeason = new ValidatedMethod({
+  name: 'season.start',
+  validate({ slug }) {
+    if (!userIsAdmin(this.userId, slug)) {
+      throw new Meteor.Error('not-owner', 'Not an owner');
+    }
+
+    if (isSeasonStarted(slug)) {
+      throw new Meteor.Error('season-started', 'Season already started');
+    }
+  },
   run({ slug }) {
-    Roles.addUsersToRoles(this.userId, 'player', slug);
-    Seasons.update(
-      { slug },
+    const season = Seasons.findOne({ slug });
+    //set the votes for all of the users
+    Meteor.users.update(
+      { 'seasons.slug': slug },
       {
-        $push: {
-          players: {
-            user: this.userId
+        $set: {
+          'seasons.$.votes': {
+            positive: season.settings.startingVote.positive,
+            negative: season.settings.startingVote.negative
           }
         }
       }
     );
+
+    //update the season with `started` true and `players` with votes
+    Seasons.update({ slug }, { $set: { started: true } });
   }
 });

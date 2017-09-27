@@ -1,6 +1,7 @@
 import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
-import { openVoting, closeVoting } from '/imports/api/voting/methods';
+import { openVoting, closeVoting, castVote } from '/imports/api/voting/methods';
+import { Seasons } from '/imports/api/seasons/Seasons';
 import BeerList from '../../components/beerList/BeerList';
 import get from 'lodash/get';
 
@@ -8,7 +9,17 @@ class Voting extends React.Component {
   constructor(props) {
     super(props);
 
-    const startingVotes = props.season.beers.reduce((beerMap, beer) => {
+    const userSeasons = get(Meteor.user(), 'seasons', []);
+    const userSeason = userSeasons.find(
+      season => season.slug === props.season.slug
+    );
+    const userVotes = userSeason.votes;
+
+    const startingVotes = get(
+      props.season,
+      'beers',
+      []
+    ).reduce((beerMap, beer) => {
       beerMap[beer.id] = {
         positive: 0,
         negative: 0
@@ -17,8 +28,8 @@ class Voting extends React.Component {
     }, {});
 
     this.state = {
-      positive: 10,
-      negative: 3,
+      userSeason,
+      ...userVotes,
       ...startingVotes
     };
 
@@ -26,6 +37,10 @@ class Voting extends React.Component {
     this.votingControls = this.votingControls.bind(this);
     this.increaseVote = this.increaseVote.bind(this);
     this.decreaseVote = this.decreaseVote.bind(this);
+    this.updateComment = this.updateComment.bind(this);
+    this.castVote = this.castVote.bind(this);
+    this.voteIsCast = this.voteIsCast.bind(this);
+    this.totalVotesCast = this.totalVotesCast.bind(this);
   }
 
   openVoting() {
@@ -139,8 +154,38 @@ class Voting extends React.Component {
     };
   }
 
+  updateComment(event) {
+    this.setState({
+      comment: event.target.value
+    });
+  }
+
+  castVote() {
+    const votes = this.props.season.beers.map(beer => ({
+      beer: beer.id,
+      ...this.state[beer.id]
+    }));
+
+    castVote.call({
+      slug: this.props.season.slug,
+      votes,
+      comment: this.state.comment
+    });
+  }
+
+  voteIsCast() {
+    return this.state.userSeason.voted;
+  }
+
+  totalVotesCast() {
+    return get(this.props.season, 'voting.voted.count', 0);
+  }
+
   render() {
     if (get(this.props.season, 'voting.open')) {
+      if (this.voteIsCast()) {
+        return `Vote cast! Waiting for others - ${this.totalVotesCast()}`;
+      }
       return (
         <div className="container">
           <div className="hero">
@@ -171,11 +216,15 @@ class Voting extends React.Component {
                         <textarea
                           className="textarea"
                           placeholder="What was the plan? Who backstabbed who? Share secrets or just talk trash here. This will be shown when the season is finished"
+                          onChange={this.updateComment}
                         />
                       </div>
                     </div>
 
-                    <a className="button is-success is-large is-pulled-right">
+                    <a
+                      className="button is-success is-large is-pulled-right"
+                      onClick={this.castVote}
+                    >
                       Cast Vote
                     </a>
                   </div>
@@ -211,3 +260,5 @@ class Voting extends React.Component {
 export default withTracker(() => {
   return {};
 })(Voting);
+
+//TODO - handle double click - set buttons as disabled after clicking
