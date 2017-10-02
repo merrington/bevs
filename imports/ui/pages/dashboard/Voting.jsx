@@ -4,16 +4,11 @@ import { openVoting, closeVoting, castVote } from '/imports/api/voting/methods';
 import { Seasons } from '/imports/api/seasons/Seasons';
 import BeerList from '../../components/beerList/BeerList';
 import get from 'lodash/get';
+import isEqual from 'lodash/isequal';
 
 class Voting extends React.Component {
   constructor(props) {
     super(props);
-
-    const userSeasons = get(Meteor.user(), 'seasons', []);
-    const userSeason = userSeasons.find(
-      season => season.slug === props.season.slug
-    );
-    const userVotes = userSeason.votes;
 
     const startingVotes = get(
       props.season,
@@ -28,9 +23,8 @@ class Voting extends React.Component {
     }, {});
 
     this.state = {
-      userSeason,
-      ...userVotes,
-      ...startingVotes
+      ...startingVotes,
+      ...props.votes
     };
 
     this.openVoting = this.openVoting.bind(this);
@@ -40,7 +34,22 @@ class Voting extends React.Component {
     this.updateComment = this.updateComment.bind(this);
     this.castVote = this.castVote.bind(this);
     this.voteIsCast = this.voteIsCast.bind(this);
-    this.totalVotesCast = this.totalVotesCast.bind(this);
+    this.closeVoting = this.closeVoting.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    //check for `votes` being updated - can happen if there's a revote
+    if (!isEqual(nextProps.votes, this.props.votes)) {
+      this.setState({
+        ...nextProps.votes
+      });
+    }
+
+    if (!isEqual(nextProps.season.history, this.props.season.history)) {
+      this.setState({
+        showLastHistory: true
+      });
+    }
   }
 
   openVoting() {
@@ -174,17 +183,62 @@ class Voting extends React.Component {
   }
 
   voteIsCast() {
-    return this.state.userSeason.voted;
+    return this.props.voted;
   }
 
-  totalVotesCast() {
-    return get(this.props.season, 'voting.voted.count', 0);
+  closeVoting() {
+    closeVoting.call({ slug: this.props.season.slug });
   }
 
   render() {
     if (get(this.props.season, 'voting.open')) {
       if (this.voteIsCast()) {
-        return `Vote cast! Waiting for others - ${this.totalVotesCast()}`;
+        const players = Meteor.users
+          .find({
+            'seasons.slug': this.props.season.slug
+          })
+          .count();
+
+        const playersLeftToVote = players - this.props.season.voting.votedCount;
+        const votedRatio = this.props.season.voting.votedCount / players;
+
+        return (
+          <div className="hero">
+            <div className="hero-body">
+              <div className="columns is-centered">
+                <div className="column is-half has-text-centered">
+                  <div>
+                    <progress
+                      className="progress is-primary"
+                      value={this.props.season.voting.votedCount}
+                      max={players}
+                    />
+                  </div>
+                  <div>
+                    Waiting for {playersLeftToVote}{' '}
+                    {playersLeftToVote && playersLeftToVote >= 1
+                      ? 'players'
+                      : 'player'}{' '}
+                    to vote
+                  </div>
+                  <div>
+                    {votedRatio && (
+                      <a
+                        className="button is-primary is-large"
+                        onClick={this.closeVoting}
+                      >
+                        <span className="icon is-small">
+                          <i className="fa fa-check" />
+                        </span>
+                        <span>Close Vote!</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       }
       return (
         <div className="container">
@@ -203,6 +257,13 @@ class Voting extends React.Component {
                         <span className="has-text-danger">
                           {this.state.negative} negative votes
                         </span>
+                      </p>
+                      <p className="subtitle">
+                        This is for{' '}
+                        <span className="has-text-primary">
+                          {this.props.season.nextPoints}
+                        </span>{' '}
+                        points
                       </p>
                     </div>
 
@@ -257,8 +318,18 @@ class Voting extends React.Component {
   }
 }
 
-export default withTracker(() => {
-  return {};
+export default withTracker(props => {
+  const userSeasons = get(Meteor.user(), 'seasons', []);
+  const userSeason = userSeasons.find(
+    season => season.slug === props.season.slug
+  );
+  const userVotes = userSeason.votes;
+
+  return {
+    ...props,
+    voted: userSeason.voted,
+    votes: userVotes
+  };
 })(Voting);
 
 //TODO - handle double click - set buttons as disabled after clicking

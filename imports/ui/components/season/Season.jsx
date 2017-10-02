@@ -13,7 +13,7 @@ class Season extends React.Component {
   }
 
   render() {
-    if (!this.props.userReady) {
+    if (!this.props.userReady || !this.props.seasonReady) {
       return 'Loading...';
     } else if (!this.props.userIsInSeason) {
       return <Redirect to="/" />;
@@ -32,10 +32,9 @@ class Season extends React.Component {
 }
 
 export default withTracker(props => {
-  const userSubHandle = Meteor.subscribe('userData');
-  const userReady = userSubHandle.ready();
-
   const slug = props.match.params.slug;
+  const userSubHandle = Meteor.subscribe('userData');
+  Meteor.subscribe('users.season', slug);
 
   const userIsInSeason = get(Meteor.user(), 'seasons', []).find(
     season => season.slug === slug
@@ -44,8 +43,8 @@ export default withTracker(props => {
   const seasonSubHandle = Meteor.subscribe('seasons.slug', slug);
 
   return {
-    userReady,
     userIsInSeason,
+    userReady: userSubHandle.ready(),
     seasonReady: seasonSubHandle.ready(),
     season: Seasons.findOne({ slug })
   };

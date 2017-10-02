@@ -332,6 +332,45 @@ class Settings extends React.Component {
         <div className="columns">
           <div className="column is-half">
             <div className="box">
+              <p className="title">Vote Values</p>
+
+              <div className="columns">
+                <div className="column">
+                  <div className="field">
+                    <label className="label">Value of positive vote</label>
+                    <div className="control">
+                      <input
+                        className="input"
+                        type="text"
+                        name="positiveValue"
+                        placeholder="Use 'x' to represent number of votes"
+                        value={get(this.props.season.settings, 'positiveValue')}
+                        onChange={this.onSettingChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="column">
+                  <div className="field">
+                    <label className="label">Value of negative vote</label>
+                    <div className="control">
+                      <input
+                        className="input"
+                        type="text"
+                        name="negativeValue"
+                        placeholder="Use 'x' to represent number of votes"
+                        value={get(this.props.season.settings, 'negativeValue')}
+                        onChange={this.onSettingChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="column is-half">
+            <div className="box">
               <p className="title">Winning</p>
 
               <div className="field">

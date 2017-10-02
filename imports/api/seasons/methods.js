@@ -138,12 +138,13 @@ export const startSeason = new ValidatedMethod({
           'seasons.$.votes': {
             positive: season.settings.startingVote.positive,
             negative: season.settings.startingVote.negative
-          }
+          },
+          'seasons.$.points': 0
         }
       }
     );
 
     //update the season with `started` true and `players` with votes
-    Seasons.update({ slug }, { $set: { started: true } });
+    Seasons.update({ slug }, { $set: { started: true, nextPoints: 1 } });
   }
 });
