@@ -13,7 +13,16 @@ export const openVoting = new ValidatedMethod({
     }
   },
   run({ slug }) {
-    Seasons.update({ slug }, { $set: { 'voting.open': true } });
+    Seasons.update(
+      { slug },
+      {
+        $set: {
+          'voting.open': true,
+          'voting.votes': [],
+          'voting.votedCount': 0
+        }
+      }
+    );
   }
 });
 
@@ -43,8 +52,10 @@ export const closeVoting = new ValidatedMethod({
         const season = Seasons.findOne({ slug });
         const beers = season.beers.reduce((acc, beer) => {
           acc[beer.id] = {
+            beer,
             positive: 0,
             negative: 0,
+            total: 0,
             highest: []
           };
 
@@ -89,6 +100,8 @@ export const closeVoting = new ValidatedMethod({
           });
         });
 
+        console.log('after count votes', { beers });
+
         // calculate the overall totals for each beer
         for (const beerId in beers) {
           const beer = beers[beerId];
@@ -115,14 +128,22 @@ export const closeVoting = new ValidatedMethod({
 
           beer.total = positive - negative;
         }
+        console.log('after calculating', { beers });
 
         //find the winning beer(s)
         let winningBeer = [];
+        let pointsAwarded = 0;
         for (const beerId in beers) {
           const beer = beers[beerId];
-          if (!winningBeer.length || beer.total > winningBeer[0].total) {
+          if (
+            beer.total > 0 &&
+            (!winningBeer.length || beer.total > winningBeer[0].total)
+          ) {
             winningBeer = [beer];
-          } else if (beer.total === winningBeer[0].total) {
+          } else if (
+            winningBeer.length &&
+            beer.total === winningBeer[0].total
+          ) {
             winningBeer.push(beer);
           }
         }
@@ -136,6 +157,7 @@ export const closeVoting = new ValidatedMethod({
               { _id: winningUserId, 'seasons.slug': slug },
               { $inc: { 'seasons.$.points': season.nextPoints } }
             );
+            pointsAwarded = season.nextPoints;
             Seasons.update({ slug }, { $set: { nextPoints: 1 } });
           } else {
             // no point was given - increase for the next vote
@@ -156,9 +178,10 @@ export const closeVoting = new ValidatedMethod({
 
           // Update the history
           const history = {
-            date: Date.now(),
+            date: new Date(),
             winningBeer,
-            beerTotals: beers,
+            pointsAwarded,
+            beerTotals: Object.keys(beers).map(beer => beers[beer]),
             votes: allUserVotes
           };
 

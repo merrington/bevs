@@ -2,6 +2,7 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { openVoting, closeVoting, castVote } from '/imports/api/voting/methods';
 import { Seasons } from '/imports/api/seasons/Seasons';
+import VoteHistory from '../../components/voteHistory/VoteHistory';
 import BeerList from '../../components/beerList/BeerList';
 import get from 'lodash/get';
 import isEqual from 'lodash/isequal';
@@ -24,7 +25,8 @@ class Voting extends React.Component {
 
     this.state = {
       ...startingVotes,
-      ...props.votes
+      ...props.votes,
+      showLastHistory: false
     };
 
     this.openVoting = this.openVoting.bind(this);
@@ -310,6 +312,17 @@ class Voting extends React.Component {
                   </a>
                 </div>
               </div>
+              {this.state.showLastHistory && (
+                <div className="columns is-centered">
+                  <div className="column is-one-third-desktop is-half-mobile">
+                    <VoteHistory
+                      {...this.props.season.history[
+                        this.props.season.history.length - 1
+                      ]}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
