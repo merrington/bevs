@@ -100,8 +100,6 @@ export const closeVoting = new ValidatedMethod({
           });
         });
 
-        console.log('after count votes', { beers });
-
         // calculate the overall totals for each beer
         for (const beerId in beers) {
           const beer = beers[beerId];
@@ -128,7 +126,6 @@ export const closeVoting = new ValidatedMethod({
 
           beer.total = positive - negative;
         }
-        console.log('after calculating', { beers });
 
         //find the winning beer(s)
         let winningBeer = [];
