@@ -6,6 +6,7 @@ import get from 'lodash/get';
 import Standings from './standings/Standings';
 import Settings from './settings/Settings';
 import Voting from '../../pages/dashboard/Voting';
+import History from './history/History';
 
 class Season extends React.Component {
   constructor(props) {
@@ -20,8 +21,18 @@ class Season extends React.Component {
     }
     return (
       <Switch>
-        <Route exact path="/season/:slug" component={Standings} />
+        <Route
+          exact
+          path="/season/:slug"
+          render={() => (
+            <Standings users={this.props.users} season={this.props.season} />
+          )}
+        />
         <Route path="/season/:slug/settings" component={Settings} />
+        <Route
+          path="/season/:slug/history"
+          render={() => <History history={this.props.season.history} />}
+        />
         <Route
           path="/season/:slug/voting"
           render={() => <Voting {...this.props} />}
@@ -46,6 +57,7 @@ export default withTracker(props => {
     userIsInSeason,
     userReady: userSubHandle.ready(),
     seasonReady: seasonSubHandle.ready(),
-    season: Seasons.findOne({ slug })
+    season: Seasons.findOne({ slug }),
+    users: Meteor.users.find({ 'seasons.slug': slug }).fetch()
   };
 })(Season);

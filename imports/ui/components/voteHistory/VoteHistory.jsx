@@ -9,7 +9,6 @@ export default function VoteHistory({
   pointsAwarded,
   beerTotals
 }) {
-  console.log({ date, winningBeer, pointsAwarded, beerTotals });
   let winningBeerImage;
   let winningUser;
   switch (winningBeer.length) {
@@ -48,11 +47,19 @@ export default function VoteHistory({
           <img src={winningBeerImage} alt="Winning beer" />
         </figure>
       </div>
-      <div className="card-content">
+      <div className="card-content" style={{ padding: 0 }}>
         <BeerList
           beers={beerTotals
-            .sort((b1, b2) => b1.total - b2.total)
+            .sort((b1, b2) => b2.total - b1.total)
             .map(b => b.beer)}
+          right={beer => (
+            <span className="tag is-medium">
+              {
+                beerTotals.find(beerTotal => beerTotal.beer.id === beer.id)
+                  .total
+              }
+            </span>
+          )}
         />
       </div>
       <div className="card-footer">{format(date, 'MMMM Do, YYYY')}</div>
