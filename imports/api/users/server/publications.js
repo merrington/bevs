@@ -6,7 +6,8 @@ Meteor.publish('users.season', slug => {
     {
       fields: {
         profile: 1,
-        'seasons.slug': 1
+        'seasons.slug': 1,
+        'seasons.points': 1
       }
     }
   );
