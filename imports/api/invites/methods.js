@@ -6,7 +6,14 @@ import { Seasons } from '/imports/api/seasons/Seasons';
 
 export const sendInvite = new ValidatedMethod({
   name: 'invites.send',
-  validate({ email, slug }) {},
+  validate({ email, slug }) {
+    if (!email || !slug) {
+      throw new Meteor.Error(
+        'not-complete',
+        'Both the email and slug must be provided'
+      );
+    }
+  },
   run({ seasonName, email, slug }) {
     if (Meteor.isServer) {
       const token = Random.hexString(8);
