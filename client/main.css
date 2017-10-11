@@ -1,0 +1,9 @@
+/* CSS declarations go here */
+html, body {
+    height: 100%;
+}
+
+@font-face {
+    font-family: 'Bebas';
+    src: url('/fonts/bebas.ttf');
+}

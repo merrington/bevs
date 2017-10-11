@@ -1,1 +1,3 @@
-import './register-apis.js';
+import './useraccounts-configuration';
+
+import './register-api';
