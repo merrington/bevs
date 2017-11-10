@@ -23,7 +23,7 @@ class Standings extends React.Component {
       if (winningBeers.length === 1) {
         const winningUsers = winningBeers[0].highest;
         if (winningUsers.length === 1) {
-          return winningUsers[0].user === user.id;
+          return winningUsers[0].user === user._id;
         }
       }
       return false;
