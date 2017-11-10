@@ -7,8 +7,12 @@ class Standings extends React.Component {
     super(props);
   }
 
+  getUserSeason = user => {
+    return user.seasons.find(season => season.slug === this.props.season.slug);
+  };
+
   sortUsersByPoints = (u1, u2) => {
-    return getUserSeason(u2).points - getUserSeason(u1).points;
+    return this.getUserSeason(u2).points - this.getUserSeason(u1).points;
   };
 
   winsForUser = user => {
@@ -45,9 +49,7 @@ class Standings extends React.Component {
           </thead>
           <tbody>
             {this.props.users.sort(this.sortUsersByPoints).map((user, idx) => {
-              const userSeason = user.seasons.find(
-                season => season.slug === this.props.season.slug
-              );
+              const userSeason = this.getUserSeason(user);
               return (
                 <tr key={idx}>
                   <td>{idx + 1}</td>
