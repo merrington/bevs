@@ -66,9 +66,15 @@ export const closeVoting = new ValidatedMethod({
         //add each vote to get the total positive/negative votes for each beer
         allUserVotes.forEach(userVote => {
           userVote.votes.forEach(beerVote => {
+            //make sure positive and negative exist
+            beerVote.positive =
+              typeof beerVote.positive === 'number' ? beerVote.positive : 0;
+            beerVote.negative =
+              typeof beerVote.negative === 'number' ? beerVote.negative : 0;
+
             const beer = beers[beerVote.beer];
-            beer.positive += beerVote.positive;
-            beer.negative += beerVote.negative;
+            beer.positive += beerVote.positive || 0;
+            beer.negative += beerVote.negative || 0;
 
             const highestVote = beer.highest[0]; //get the current highest vote
             if (highestVote && beerVote.positive > highestVote.positive) {
@@ -191,8 +197,11 @@ export const closeVoting = new ValidatedMethod({
 
 export const castVote = new ValidatedMethod({
   name: 'voting.cast',
-  validate({ votes, slug }) {
-    const user = Meteor.users.findOne(this.userId);
+  validate({ votes, slug, userId = undefined }) {
+    if (userId && this.userId && userId !== this.userId) {
+      throw new Meteor.Error('bad-user', 'Cannot cast vote for another user');
+    }
+    const user = Meteor.users.findOne(this.userId || userId);
     const userSeason = get(user, 'seasons', []).find(
       season => season.slug === slug
     );
@@ -220,15 +229,18 @@ export const castVote = new ValidatedMethod({
       throw new Meteor.Error('already-voted', 'Already cast a vote');
     }
   },
-  run({ votes, slug, comment }) {
+  run({ votes, slug, comment, userId = undefined }) {
+    if (!this.userId && userId) {
+      this.userId = userId;
+    }
     // Remove the votes cast from the user
     const userVotes = Meteor.users
       .findOne(this.userId)
       .seasons.find(season => season.slug === slug).votes;
 
     votes.forEach(vote => {
-      userVotes.positive -= vote.positive;
-      userVotes.negative -= vote.negative;
+      userVotes.positive -= vote.positive || 0;
+      userVotes.negative -= vote.negative || 0;
     });
 
     Meteor.users.update(
@@ -254,5 +266,7 @@ export const castVote = new ValidatedMethod({
         }
       }
     );
+
+    return true;
   }
 });

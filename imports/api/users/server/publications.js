@@ -17,7 +17,8 @@ Meteor.publish('userData', function publishUserData() {
   if (this.userId) {
     return Meteor.users.find(this.userId, {
       fields: {
-        seasons: 1
+        seasons: 1,
+        apiKey: 1
       }
     });
   } else {

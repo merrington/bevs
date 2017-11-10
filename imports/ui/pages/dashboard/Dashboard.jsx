@@ -10,6 +10,7 @@ import Header from '../../components/header/Header.jsx';
 import SeasonListContainer from '../../components/season-list/SeasonList';
 import Season from '../../components/season/Season';
 import AcceptInvite from '../../components/acceptInvite/AcceptInvite';
+import Profile from '../profile/Profile';
 
 export default function Dashboard() {
   return (
@@ -18,6 +19,7 @@ export default function Dashboard() {
       <Switch>
         <Route path="/invite/:token" component={AcceptInvite} />
         <Route path="/season/:slug" component={Season} />
+        <Route path="/profile" component={Profile} />
         <Route exact path="/" component={SeasonListContainer} />
         <Route render={props => <Redirect to="/" />} />
       </Switch>

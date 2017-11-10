@@ -10,3 +10,5 @@ import '../../api/brewerydb/methods';
 import '../../api/users/server/publications';
 
 import '../../api/voting/methods';
+
+import '../../api/users/methods';

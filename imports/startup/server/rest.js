@@ -4,42 +4,60 @@ import { castVote } from '/imports/api/voting/methods';
 
 const api = new Restivus({
   version: 'v1',
-  apiPath: 'api/',
+  apiPath: 'api',
   auth: {
-    token: 'apiKey'
+    token: 'apiKey',
+    user: function() {
+      return {
+        userId: this.request.headers['x-user-id'],
+        token: this.request.headers['x-auth-token']
+      };
+    }
   },
   prettyJson: true
 });
 
-api.addRoute('/users/me', {
+api.addRoute('users/me', {
   authRequired: true,
-  get() {
-    console.log('here');
-    return Meteor.users.findOne(this.userId);
-  }
-});
-
-api.addRoute('/seasons/:slug', {
-  authRequired: true,
-  get() {
-    const slug = this.urlParams.slug;
-
-    if (this.user.seasons.find(season => season.slug === slug)) {
-      return Seasons.findOne({ slug }).fetch();
+  get: {
+    authRequired: true,
+    action() {
+      return Meteor.users.findOne(this.userId, {
+        fields: {
+          seasons: 1
+        }
+      });
     }
-    return {
-      statusCode: 403,
-      body: 'Not a player in season'
-    };
   }
 });
 
-api.addRoute('/seasons/:slug/vote', {
+api.addRoute('seasons/:slug', {
   authRequired: true,
-  post() {
-    const slug = this.urlParams.slug;
-    const votes = this.bodyParams.votes;
+  get: {
+    authRequired: true,
+    action() {
+      const slug = this.urlParams.slug;
 
-    return castVote.call({ slug, votes });
+      if (this.user.seasons.find(season => season.slug === slug)) {
+        return Seasons.findOne({ slug });
+      }
+      return {
+        statusCode: 403,
+        body: 'Not a player in season'
+      };
+    }
+  }
+});
+
+api.addRoute('seasons/:slug/vote', {
+  authRequired: true,
+  post: {
+    authRequired: true,
+    action() {
+      const slug = this.urlParams.slug;
+      const votes = this.bodyParams.votes;
+
+      return castVote.call({ slug, votes, userId: this.userId });
+    }
   }
 });

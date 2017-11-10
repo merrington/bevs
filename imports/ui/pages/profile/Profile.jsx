@@ -39,6 +39,17 @@ class Profile extends React.Component {
               </div>
             </div>
 
+            <label className="label">User ID</label>
+            <div className="control">
+              <input
+                className="input"
+                type="text"
+                placholder="User ID"
+                value={this.props.user._id}
+                readOnly
+              />
+            </div>
+
             <label className="label">API Key</label>
             <div className="field has-addons">
               <p className="control is-expanded">

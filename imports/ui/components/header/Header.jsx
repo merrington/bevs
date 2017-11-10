@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Switch, Route } from 'react-router-dom';
 import SeasonMenu from './season-menu/SeasonMenu';
@@ -41,6 +41,9 @@ class Header extends React.Component {
                 {this.props.currentUser.profile.name}
               </a>
               <div className="navbar-dropdown is-right">
+                <NavLink className="navbar-item" to="/profile">
+                  Profile
+                </NavLink>
                 <a className="navbar-item" onClick={this.logoutHandler}>
                   Logout
                 </a>
