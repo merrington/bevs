@@ -46,7 +46,8 @@ export const closeVoting = new ValidatedMethod({
         //update all users to set voted false
         Meteor.users.update(
           { 'seasons.slug': slug },
-          { $set: { 'seasons.$.voted': false } }
+          { $set: { 'seasons.$.voted': false } },
+          { multi: true }
         );
 
         const season = Seasons.findOne({ slug });
@@ -176,7 +177,8 @@ export const closeVoting = new ValidatedMethod({
                   season.settings.refreshVote.positive,
                 'seasons.$.votes.negative': season.settings.refreshVote.negative
               }
-            }
+            },
+            { multi: true }
           );
 
           // Update the history

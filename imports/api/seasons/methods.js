@@ -141,7 +141,8 @@ export const startSeason = new ValidatedMethod({
           },
           'seasons.$.points': 0
         }
-      }
+      },
+      { multi: true }
     );
 
     //update the season with `started` true and `players` with votes
