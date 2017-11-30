@@ -180,18 +180,22 @@ export const closeVoting = new ValidatedMethod({
             },
             { multi: true }
           );
-
-          // Update the history
-          const history = {
-            date: new Date(),
-            winningBeer,
-            pointsAwarded,
-            beerTotals: Object.keys(beers).map(beer => beers[beer]),
-            votes: allUserVotes
-          };
-
-          Seasons.update({ slug }, { $addToSet: { history } });
+        } else if (winningBeer.length > 1) {
+          //there was a beer tie - do nothing to pointsAwarded, etc.
+        } else {
+          //there was no winning beer - pepsi!
         }
+
+        const history = {
+          date: new Date(),
+          winningBeer,
+          pointsAwarded,
+          beerTotals: Object.keys(beers).map(beer => beers[beer]),
+          votes: allUserVotes
+        };
+
+        //update the season
+        Seasons.update({ slug }, { $addToSet: { history } });
       }
     }
   }
