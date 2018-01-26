@@ -43,6 +43,13 @@ export const closeVoting = new ValidatedMethod({
       );
 
       if (seasonClosed) {
+        //update any user that didn't vote by removing 1 vote
+        Meteor.users.update(
+          { 'seasons.slug': slug, 'seasons.$.voted': false },
+          { $inc: { 'season.$.votes.positive': -1 } },
+          { multi: true }
+        );
+
         //update all users to set voted false
         Meteor.users.update(
           { 'seasons.slug': slug },
